@@ -1,0 +1,47 @@
+{
+  "id": "uniandes_bouldering_029_44-----0-----uniandes_bouldering_034_87-----17-----Head",
+  "take": "uniandes_bouldering_029_44",
+  "expert_id": "jvwhm1",
+  "commentary_idx": "0.txt",
+  "video1": "uniandes_bouldering_029_44",
+  "video1_range": "[1229, 1349]",
+  "video2": "uniandes_bouldering_034_87",
+  "video2_range": "[1150, 1270]",
+  "best_dtw_score": 0,
+  "num_candidates_searched": 121,
+  "corrected_body_part": "Head",
+  "all_incorrect_body_parts_video1": null,
+  "all_correct_body_parts_video2": null,
+  "text": "The climber needs to improve their route-reading skills by glancing ahead to plan their next moves before executing them.",
+  "original_text": " The climber is starting at a one-hold start where both hands are in the same hold. This is called matching and the type of hold she is sustaining to is a large one with a lip where the climber can wrap the fingers behind the lip of the hold being a positive grip. Now the climber is placing the right foot onto a large foothold and when the climber is placing the other foot then she will no longer be standing on the mat. Then the climb will start.",
+  "original_label": {
+    "One sentence summary": "The climber needs to improve their route-reading skills by glancing ahead to plan their next moves before executing them.",
+    "Needs improvement parts": [
+      "Head"
+    ],
+    "Good execution parts": []
+  },
+  "good_execution_commentary": "The climber should maintain a square position to the wall, balance, and generate tension to bump the left hand up to the pinch hold.",
+  "original_good_execution_commentary": " So here we can see him setting this heel hook and that's gonna let him just kind of take a little bit more of the weight to his hands, but I think in order to make the heel hook effective is first grabbing it this this pinch on the left side because now The only open spot is on the left side so he's gonna have to cross it kind of under with his right arm pinch To then move up to the left So it's gonna make the sequence a little bit harder and harder to kind of share that hold and pull from that hold But overall the heel looks a nice idea because it's gonna Let him kind of pull straight down through the hold and it's gonna free up that right arm to do whatever it needs to do",
+  "original_good_execution_label": {
+    "One sentence summary": "The climber should maintain a square position to the wall, balance, and generate tension to bump the left hand up to the pinch hold.",
+    "Needs improvement parts": [
+      "Hands"
+    ],
+    "Good execution parts": [
+      "Head",
+      "Arms",
+      "Legs"
+    ]
+  },
+  "conversations": [
+    {
+      "from": "human",
+      "value": "<pose1>\n Here is a pose sequence of a person doing Rock Climbing. Give feedback on the execution based on a correct pose sequence done by an expert as follows: <pose2> ."
+    },
+    {
+      "from": "gpt",
+      "value": "Here is the feedback based on the given pose sequence and the expert correct sequence:  The climber needs to improve their route-reading skills by glancing ahead to plan their next moves before executing them."
+    }
+  ]
+}

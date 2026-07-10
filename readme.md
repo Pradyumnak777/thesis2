@@ -1,1 +1,1 @@
-- work on getting dataset
+- work on getting ego exo 4d dataset
