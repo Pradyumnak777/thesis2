@@ -1,0 +1,342 @@
+# Field Dictionary
+
+Missing CSV scalar values use `NA`; JSON missing values use `null`.
+
+## `data/evaluation_pairs.csv`
+
+- `pair_id`
+  - type: string
+  - presence: required
+  - description: Stable unique identifier for a novice--expert reference pair.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_instance_id`
+  - type: string
+  - presence: required
+  - description: Stable ID for the novice action instance.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_instance_id`
+  - type: string
+  - presence: required
+  - description: Stable ID for the expert action instance.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_rank_index`
+  - type: integer
+  - presence: required
+  - description: Reference rank among expert clips for the same novice instance.
+  - missing value: `NA` in CSV, `null` in JSON
+- `dataset`
+  - type: string
+  - presence: required
+  - description: Source dataset slug.
+  - missing value: `NA` in CSV, `null` in JSON
+- `sport_or_domain`
+  - type: string
+  - presence: required
+  - description: Domain label such as basketball, soccer, or karate.
+  - missing value: `NA` in CSV, `null` in JSON
+- `technique`
+  - type: string
+  - presence: required
+  - description: Display technique name.
+  - missing value: `NA` in CSV, `null` in JSON
+- `technique_slug`
+  - type: string
+  - presence: required
+  - description: Lowercase snake_case technique slug.
+  - missing value: `NA` in CSV, `null` in JSON
+- `split`
+  - type: string
+  - presence: required
+  - description: Benchmark split; evaluation pairs use test.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_subject_id`
+  - type: string
+  - presence: required
+  - description: Source subject code if available; NA for unavailable Ego-Exo4D subject IDs.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_subject_id`
+  - type: string
+  - presence: required
+  - description: Source expert subject code if available.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_video_uid`
+  - type: string
+  - presence: required
+  - description: Source novice video ID when applicable.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_video_uid`
+  - type: string
+  - presence: required
+  - description: Source expert video ID when applicable.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_clip_uid`
+  - type: string
+  - presence: required
+  - description: Released novice clip/action ID.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_clip_uid`
+  - type: string
+  - presence: required
+  - description: Released expert clip/action ID.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_start_frame`
+  - type: integer
+  - presence: required
+  - description: Start frame in the local source sequence.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_end_frame`
+  - type: integer
+  - presence: required
+  - description: End frame in the local source sequence.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_start_frame`
+  - type: integer
+  - presence: required
+  - description: Expert start frame in the local source sequence.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_end_frame`
+  - type: integer
+  - presence: required
+  - description: Expert end frame in the local source sequence.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_start_sec`
+  - type: string
+  - presence: required
+  - description: Start time in seconds if available.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_end_sec`
+  - type: string
+  - presence: required
+  - description: End time in seconds if available.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_start_sec`
+  - type: string
+  - presence: required
+  - description: Expert start time in seconds if available.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_end_sec`
+  - type: string
+  - presence: required
+  - description: Expert end time in seconds if available.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_pose_ref`
+  - type: string
+  - presence: required
+  - description: Relative reference convention for local source pose data.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_pose_ref`
+  - type: string
+  - presence: required
+  - description: Relative reference convention for local expert pose data.
+  - missing value: `NA` in CSV, `null` in JSON
+- `dtw_used`
+  - type: boolean
+  - presence: required
+  - description: Whether DTW alignment is used for frame-level evaluation.
+  - missing value: `NA` in CSV, `null` in JSON
+- `dtw_alignment_id`
+  - type: string
+  - presence: required
+  - description: ID into the DTW alignment JSONL when DTW is used.
+  - missing value: `NA` in CSV, `null` in JSON
+- `mirror_used`
+  - type: boolean
+  - presence: required
+  - description: Whether sagittal mirroring was selected by alignment.
+  - missing value: `NA` in CSV, `null` in JSON
+
+## `data/clips.csv`
+
+- `clip_uid`
+  - type: string
+  - presence: required
+  - description: Clip uid.
+  - missing value: `NA` in CSV, `null` in JSON
+- `dataset`
+  - type: string
+  - presence: required
+  - description: Source dataset slug.
+  - missing value: `NA` in CSV, `null` in JSON
+- `sport_or_domain`
+  - type: string
+  - presence: required
+  - description: Domain label such as basketball, soccer, or karate.
+  - missing value: `NA` in CSV, `null` in JSON
+- `technique`
+  - type: string
+  - presence: required
+  - description: Display technique name.
+  - missing value: `NA` in CSV, `null` in JSON
+- `technique_slug`
+  - type: string
+  - presence: required
+  - description: Lowercase snake_case technique slug.
+  - missing value: `NA` in CSV, `null` in JSON
+- `role`
+  - type: string
+  - presence: required
+  - description: Role.
+  - missing value: `NA` in CSV, `null` in JSON
+- `subject_id`
+  - type: string
+  - presence: required
+  - description: Subject id.
+  - missing value: `NA` in CSV, `null` in JSON
+- `video_uid`
+  - type: string
+  - presence: required
+  - description: Video uid.
+  - missing value: `NA` in CSV, `null` in JSON
+- `source_sequence_id`
+  - type: string
+  - presence: required
+  - description: Source sequence id.
+  - missing value: `NA` in CSV, `null` in JSON
+- `start_frame`
+  - type: integer
+  - presence: required
+  - description: Start frame.
+  - missing value: `NA` in CSV, `null` in JSON
+- `end_frame`
+  - type: integer
+  - presence: required
+  - description: End frame.
+  - missing value: `NA` in CSV, `null` in JSON
+- `start_sec`
+  - type: string
+  - presence: required
+  - description: Start sec.
+  - missing value: `NA` in CSV, `null` in JSON
+- `end_sec`
+  - type: string
+  - presence: required
+  - description: End sec.
+  - missing value: `NA` in CSV, `null` in JSON
+- `fps`
+  - type: string
+  - presence: required
+  - description: Fps.
+  - missing value: `NA` in CSV, `null` in JSON
+- `num_frames`
+  - type: integer
+  - presence: required
+  - description: Num frames.
+  - missing value: `NA` in CSV, `null` in JSON
+- `pose_representation`
+  - type: string
+  - presence: required
+  - description: Pose representation.
+  - missing value: `NA` in CSV, `null` in JSON
+- `pose_ref`
+  - type: string
+  - presence: required
+  - description: Pose ref.
+  - missing value: `NA` in CSV, `null` in JSON
+- `proficiency_label`
+  - type: string
+  - presence: required
+  - description: Proficiency label.
+  - missing value: `NA` in CSV, `null` in JSON
+- `proficiency_rank`
+  - type: string
+  - presence: required
+  - description: Proficiency rank.
+  - missing value: `NA` in CSV, `null` in JSON
+- `narration_text`
+  - type: string
+  - presence: required
+  - description: Narration text.
+  - missing value: `NA` in CSV, `null` in JSON
+- `operative_phrase`
+  - type: string
+  - presence: required
+  - description: Operative phrase.
+  - missing value: `NA` in CSV, `null` in JSON
+- `source_dataset_split`
+  - type: string
+  - presence: required
+  - description: Source dataset split.
+  - missing value: `NA` in CSV, `null` in JSON
+- `notes`
+  - type: string
+  - presence: required
+  - description: Free-text release note.
+  - missing value: `NA` in CSV, `null` in JSON
+
+## `data/dtw_alignments/egoexo4d_alignments.jsonl.gz`
+
+- `dtw_alignment_id`
+  - type: string
+  - presence: required
+  - description: ID into the DTW alignment JSONL when DTW is used.
+  - missing value: `NA` in CSV, `null` in JSON
+- `pair_id`
+  - type: string
+  - presence: required
+  - description: Stable unique identifier for a novice--expert reference pair.
+  - missing value: `NA` in CSV, `null` in JSON
+- `dataset`
+  - type: string
+  - presence: required
+  - description: Source dataset slug.
+  - missing value: `NA` in CSV, `null` in JSON
+- `technique_slug`
+  - type: string
+  - presence: required
+  - description: Lowercase snake_case technique slug.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_num_frames`
+  - type: integer
+  - presence: required
+  - description: Novice num frames.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_original_num_frames`
+  - type: integer
+  - presence: required
+  - description: Expert original num frames.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_resampled_num_frames`
+  - type: integer
+  - presence: required
+  - description: Expert resampled num frames.
+  - missing value: `NA` in CSV, `null` in JSON
+- `novice_frame_indices`
+  - type: array
+  - presence: required
+  - description: Novice frame indices.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_frame_indices_original`
+  - type: string
+  - presence: required
+  - description: Expert frame indices original.
+  - missing value: `NA` in CSV, `null` in JSON
+- `expert_frame_indices_resampled`
+  - type: string
+  - presence: required
+  - description: Expert frame indices resampled.
+  - missing value: `NA` in CSV, `null` in JSON
+- `mirror_used`
+  - type: boolean
+  - presence: required
+  - description: Whether sagittal mirroring was selected by alignment.
+  - missing value: `NA` in CSV, `null` in JSON
+- `dtw_cost`
+  - type: number
+  - presence: required
+  - description: Dtw cost.
+  - missing value: `NA` in CSV, `null` in JSON
+- `alignment_method`
+  - type: string
+  - presence: required
+  - description: Alignment method.
+  - missing value: `NA` in CSV, `null` in JSON
+- `dtw_path_local`
+  - type: array
+  - presence: required
+  - description: Dtw path local.
+  - missing value: `NA` in CSV, `null` in JSON
+- `notes`
+  - type: string
+  - presence: required
+  - description: Free-text release note.
+  - missing value: `NA` in CSV, `null` in JSON

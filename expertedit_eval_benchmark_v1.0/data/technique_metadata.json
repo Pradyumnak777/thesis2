@@ -1,0 +1,137 @@
+{
+  "techniques": [
+    {
+      "clip_length_frames": 120,
+      "dataset": "egoexo4d",
+      "dtw_used_for_eval": true,
+      "fps": 30,
+      "kinematic_signal": "vertical_velocity",
+      "mask_span_alpha_default": 0.3,
+      "notes": "Evaluation metadata only; source media and pose arrays are not redistributed.",
+      "operative_phrases": [
+        "motion peak",
+        "technique execution"
+      ],
+      "pose_representation": "smpl_axis_angle",
+      "sport_or_domain": "basketball",
+      "technique_name": "Reverse layup",
+      "technique_slug": "reverse_layup"
+    },
+    {
+      "clip_length_frames": 90,
+      "dataset": "egoexo4d",
+      "dtw_used_for_eval": true,
+      "fps": 30,
+      "kinematic_signal": "vertical_velocity",
+      "mask_span_alpha_default": 0.3,
+      "notes": "Evaluation metadata only; source media and pose arrays are not redistributed.",
+      "operative_phrases": [
+        "motion peak",
+        "technique execution"
+      ],
+      "pose_representation": "smpl_axis_angle",
+      "sport_or_domain": "basketball",
+      "technique_name": "Mikan layup",
+      "technique_slug": "mikan_layup"
+    },
+    {
+      "clip_length_frames": 90,
+      "dataset": "egoexo4d",
+      "dtw_used_for_eval": true,
+      "fps": 30,
+      "kinematic_signal": "vertical_velocity",
+      "mask_span_alpha_default": 0.3,
+      "notes": "Evaluation metadata only; source media and pose arrays are not redistributed.",
+      "operative_phrases": [
+        "motion peak",
+        "technique execution"
+      ],
+      "pose_representation": "smpl_axis_angle",
+      "sport_or_domain": "basketball",
+      "technique_name": "Mid-range jump shot",
+      "technique_slug": "midrange_jumpshot"
+    },
+    {
+      "clip_length_frames": 120,
+      "dataset": "egoexo4d",
+      "dtw_used_for_eval": true,
+      "fps": 30,
+      "kinematic_signal": "maximum_jerk",
+      "mask_span_alpha_default": 0.3,
+      "notes": "Evaluation metadata only; source media and pose arrays are not redistributed.",
+      "operative_phrases": [
+        "motion peak",
+        "technique execution"
+      ],
+      "pose_representation": "smpl_axis_angle",
+      "sport_or_domain": "soccer",
+      "technique_name": "Penalty kick",
+      "technique_slug": "penalty_kick"
+    },
+    {
+      "clip_length_frames": 64,
+      "dataset": "kyokushin_karate",
+      "dtw_used_for_eval": false,
+      "fps": null,
+      "kinematic_signal": "postural_extremeness",
+      "mask_span_alpha_default": 0.3,
+      "notes": "Karate evaluation uses fixed-length temporally aligned motion clips.",
+      "operative_phrases": [
+        "full_pose_or_striking_arm"
+      ],
+      "pose_representation": "custom_mocap_axis_angle",
+      "sport_or_domain": "karate",
+      "technique_name": "Reverse Punch",
+      "technique_slug": "reverse_punch"
+    },
+    {
+      "clip_length_frames": 64,
+      "dataset": "kyokushin_karate",
+      "dtw_used_for_eval": false,
+      "fps": null,
+      "kinematic_signal": "foot_acceleration",
+      "mask_span_alpha_default": 0.3,
+      "notes": "Karate evaluation uses fixed-length temporally aligned motion clips.",
+      "operative_phrases": [
+        "kicking_foot"
+      ],
+      "pose_representation": "custom_mocap_axis_angle",
+      "sport_or_domain": "karate",
+      "technique_name": "Spinning Back Kick",
+      "technique_slug": "spinning_back_kick"
+    },
+    {
+      "clip_length_frames": 64,
+      "dataset": "kyokushin_karate",
+      "dtw_used_for_eval": false,
+      "fps": null,
+      "kinematic_signal": "foot_acceleration",
+      "mask_span_alpha_default": 0.3,
+      "notes": "Karate evaluation uses fixed-length temporally aligned motion clips.",
+      "operative_phrases": [
+        "kicking_foot"
+      ],
+      "pose_representation": "custom_mocap_axis_angle",
+      "sport_or_domain": "karate",
+      "technique_name": "Front Kick",
+      "technique_slug": "front_kick"
+    },
+    {
+      "clip_length_frames": 64,
+      "dataset": "kyokushin_karate",
+      "dtw_used_for_eval": false,
+      "fps": null,
+      "kinematic_signal": "foot_acceleration",
+      "mask_span_alpha_default": 0.3,
+      "notes": "Karate evaluation uses fixed-length temporally aligned motion clips.",
+      "operative_phrases": [
+        "kicking_foot"
+      ],
+      "pose_representation": "custom_mocap_axis_angle",
+      "sport_or_domain": "karate",
+      "technique_name": "Roundhouse Kick",
+      "technique_slug": "roundhouse_kick"
+    }
+  ],
+  "version": "1.0"
+}

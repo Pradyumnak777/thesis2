@@ -1,0 +1,58 @@
+{
+  "front_kick": {
+    "alpha_default": 0.3,
+    "body_part_or_reference": "kicking_foot",
+    "mask_center": "signal_peak",
+    "peak_rule": "argmax",
+    "signal_name": "foot_acceleration"
+  },
+  "midrange_jumpshot": {
+    "alpha_default": 0.3,
+    "body_part_or_reference": "root_or_body_center",
+    "mask_center": "signal_peak",
+    "peak_rule": "argmax",
+    "signal_name": "vertical_velocity"
+  },
+  "mikan_layup": {
+    "alpha_default": 0.3,
+    "body_part_or_reference": "root_or_body_center",
+    "mask_center": "signal_peak",
+    "peak_rule": "argmax",
+    "signal_name": "vertical_velocity"
+  },
+  "penalty_kick": {
+    "alpha_default": 0.3,
+    "body_part_or_reference": "kicking_leg_or_full_pose",
+    "mask_center": "signal_peak",
+    "peak_rule": "argmax",
+    "signal_name": "maximum_jerk"
+  },
+  "reverse_layup": {
+    "alpha_default": 0.3,
+    "body_part_or_reference": "root_or_body_center",
+    "mask_center": "signal_peak",
+    "peak_rule": "argmax",
+    "signal_name": "vertical_velocity"
+  },
+  "reverse_punch": {
+    "alpha_default": 0.3,
+    "body_part_or_reference": "full_pose_or_striking_arm",
+    "mask_center": "signal_peak",
+    "peak_rule": "argmax",
+    "signal_name": "postural_extremeness"
+  },
+  "roundhouse_kick": {
+    "alpha_default": 0.3,
+    "body_part_or_reference": "kicking_foot",
+    "mask_center": "signal_peak",
+    "peak_rule": "argmax",
+    "signal_name": "foot_acceleration"
+  },
+  "spinning_back_kick": {
+    "alpha_default": 0.3,
+    "body_part_or_reference": "kicking_foot",
+    "mask_center": "signal_peak",
+    "peak_rule": "argmax",
+    "signal_name": "foot_acceleration"
+  }
+}

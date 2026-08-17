@@ -1,0 +1,128 @@
+{
+  "contains_personally_identifying_information": false,
+  "contains_raw_media": false,
+  "created_utc": "2026-07-01T02:42:58Z",
+  "datasets": [
+    "egoexo4d",
+    "kyokushin_karate"
+  ],
+  "files": [
+    {
+      "description": "Citation metadata",
+      "format": "cff",
+      "path": "CITATION.cff"
+    },
+    {
+      "description": "Source dataset terms notice",
+      "format": "md",
+      "path": "DATASET_LICENSE_NOTICE.md"
+    },
+    {
+      "description": "Metadata and script license placeholder",
+      "format": "md",
+      "path": "LICENSE.md"
+    },
+    {
+      "description": "Release overview and usage instructions",
+      "format": "md",
+      "path": "README.md"
+    },
+    {
+      "description": "Release version",
+      "format": "txt",
+      "path": "VERSION.txt"
+    },
+    {
+      "description": "SHA256 checksums for release files",
+      "format": "sha256",
+      "path": "checksums.sha256"
+    },
+    {
+      "description": "Deduplicated clip metadata",
+      "format": "csv",
+      "path": "data/clips.csv"
+    },
+    {
+      "description": "DTW alignment documentation",
+      "format": "md",
+      "path": "data/dtw_alignments/README.md"
+    },
+    {
+      "description": "Ego-Exo4D DTW frame correspondences",
+      "format": "jsonl.gz",
+      "path": "data/dtw_alignments/egoexo4d_alignments.jsonl.gz"
+    },
+    {
+      "description": "Release row counts by technique",
+      "format": "json",
+      "path": "data/evaluation_counts.json"
+    },
+    {
+      "description": "Core evaluation pair metadata",
+      "format": "csv",
+      "path": "data/evaluation_pairs.csv"
+    },
+    {
+      "description": "Evaluation pair metadata as JSON Lines",
+      "format": "jsonl",
+      "path": "data/evaluation_pairs.jsonl"
+    },
+    {
+      "description": "Kinematic signal definitions",
+      "format": "json",
+      "path": "data/kinematic_signals.json"
+    },
+    {
+      "description": "Technique-level metadata",
+      "format": "json",
+      "path": "data/technique_metadata.json"
+    },
+    {
+      "description": "Field dictionary",
+      "format": "md",
+      "path": "docs/field_dictionary.md"
+    },
+    {
+      "description": "Build log and release notes",
+      "format": "md",
+      "path": "docs/release_notes.md"
+    },
+    {
+      "description": "Machine-readable release manifest",
+      "format": "json",
+      "path": "manifest.json"
+    },
+    {
+      "description": "Script documentation",
+      "format": "md",
+      "path": "scripts/README.md"
+    },
+    {
+      "description": "Lightweight metadata loader",
+      "format": "py",
+      "path": "scripts/load_evaluation_pairs.py"
+    },
+    {
+      "description": "Release validator",
+      "format": "py",
+      "path": "scripts/validate_release.py"
+    }
+  ],
+  "name": "expertedit_eval_benchmark",
+  "paper": "ExpertEdit: Learning Skill-Aware Motion Editing from Expert Videos",
+  "project_page": "TODO",
+  "release_type": "metadata_and_alignment_files",
+  "source_git_commit": "e96efce4a7d551d5ce0d3f692830b5507568620f",
+  "techniques": [
+    "reverse_layup",
+    "penalty_kick",
+    "midrange_jumpshot",
+    "mikan_layup",
+    "reverse_punch",
+    "spinning_back_kick",
+    "front_kick",
+    "roundhouse_kick"
+  ],
+  "version": "1.0",
+  "zenodo_doi": "TODO"
+}

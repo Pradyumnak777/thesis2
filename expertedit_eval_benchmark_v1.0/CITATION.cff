@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: "ExpertEdit Evaluation Benchmark Metadata"
+message: "If you use this benchmark, please cite the ExpertEdit paper and this Zenodo release."
+type: dataset
+authors:
+  - family-names: Somayazulu
+    given-names: Arjun
+  - family-names: Grauman
+    given-names: Kristen
+version: "1.0"
+date-released: "2026-07-01"
+doi: "TODO: Zenodo version DOI"
+url: "TODO: project page or Zenodo concept DOI"
+preferred-citation:
+  type: conference-paper
+  title: "ExpertEdit: Learning Skill-Aware Motion Editing from Expert Videos"
+  authors:
+    - family-names: Somayazulu
+      given-names: Arjun
+    - family-names: Grauman
+      given-names: Kristen
+  conference:
+    name: "European Conference on Computer Vision"
+  year: 2026
