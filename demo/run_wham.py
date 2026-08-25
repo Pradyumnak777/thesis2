@@ -11,6 +11,7 @@ the pelvis translation across frames.
     b) Mikan Layup- lower body should move?
     c) reverse layup- again lower body and shoulder?
 
-these are some example hehuristics of what could be checked.
+these are some example hehuristics of what could be checked. or simply, translation of the pelvis,
+which seems to be a unified heuristic could be better to start off with
 '''
 
