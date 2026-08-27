@@ -40,42 +40,63 @@ model = smplx.create(
     gender="neutral"
 )
 
-
-def heuristic_pose_selector(BASE):#base is the path to the smpl directory, NOT the smpl file itself!
-    
+def basic_heuristic(BASE):#base is the path to the smpl directory, NOT the smpl file itself!
     wham_output      = joblib.load(f"{BASE}/wham_output.pkl")
     slam_results     = joblib.load(f"{BASE}/slam_results.pth")
     tracking_results = joblib.load(f"{BASE}/tracking_results.pth")
 
-    
-    #inspecting the files
-    print("\nPKL Type: ", type(wham_output))
-    print("\nPTH(slam) Type:", type(slam_results))
-    print("\nPTH(tracking) Type:", type(tracking_results))
-    
-    
-    
-    if len(wham_output) > 1:
+    track_ids = list(wham_output.keys())
+    people = list(wham_output.values())
+
+    if len(people) == 1:
+        best_id = track_ids[0]
+    else:
         '''
         some heuristic needs to be defined
         -> for now relying on pelvis movement
         '''
         pelvis_trans = []
-        for person in wham_output:
-            trans_world = person["trans_world"] #(frames, 3)
+        for person in people:
+            trans_world = person["trans_world"]  # (frames, 3)
+            diffs = np.diff(trans_world, axis=0)
+            step_dist = np.linalg.norm(diffs, axis=1)
+            pelvis_trans.append(step_dist.sum())
+        best_id = track_ids[int(np.argmax(pelvis_trans))]
+
+    return best_id, wham_output
+
+
+def jumphot_heuristic(BASE):#base is the path to the smpl directory, NOT the smpl file itself!
+    wham_output      = joblib.load(f"{BASE}/wham_output.pkl")
+    slam_results     = joblib.load(f"{BASE}/slam_results.pth")
+    tracking_results = joblib.load(f"{BASE}/tracking_results.pth")
+
+    track_ids = list(wham_output.keys())
+    people = list(wham_output.values())
+
+    if len(people) == 1:
+        best_id = track_ids[0]
+    else:
+        '''
+        some heuristic needs to be defined
+        -> jumpshot: pelvis in y axis(?)
+        '''
+        pelvis_trans = []
+        for person in people:
+            trans_world = person["trans_world"]  # (frames, 3)
+            vertical_trans = trans_world[:,1] # y axis
             
-            #check the x,y,z coords movement, across all frames 
-            diffs = np.diff(trans_world, axis = 0) #(frames-1, 3)
-            step_dist = np.linalg.norm(diffs, axis=1) #distance per step - (frames-1,)
-            val = step_dist.sum()
-            pelvis_trans.append(val)
+            #find difference between min and max
+            jump_displacement = np.percentile(vertical_trans, 95) - np.percentile(vertical_trans, 5)
 
-        best_idx = int(np.argmax(pelvis_trans))
+            pelvis_trans.append(jump_displacement.sum())
+        
+        best_id = track_ids[int(np.argmax(pelvis_trans))]
 
-    return best_idx
-    
+    return best_id, wham_output
 
-    
+
+
     # #get the first person pose information (over all frames)
     # pose_info = wham_output[0]
     # # joblib.dump(pose_info, "pose_info.joblib")
