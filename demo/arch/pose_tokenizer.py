@@ -114,7 +114,7 @@ class poseTokenizer(nn.Module):
         T = x.shape[1]
         h = self.encoder_proj(x)  # [B, T, d_model]
         h = self.pos_encoder(h) #adding position info before self attn
-        causal_mask = nn.Transformer.generate_square_subsequent_mask(T, device=x.device)
+        causal_mask = nn.Transformer.generate_square_subsequent_mask(T).to(x.device)
         h_out = self.transformer_encoder(h, mask=causal_mask, is_causal=True)  # [B, T, d_model]
         z_e = self.output_proj_encoder(h_out)
 

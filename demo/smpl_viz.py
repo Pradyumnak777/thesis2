@@ -32,8 +32,8 @@ import pyrender
 import imageio
 
 
-SMPL_FILE = "demo/basketball_expert_smpl/Mid-range jump shot/sfu_basketball_03_12__7.467-9.467__cam01/wham_output_selected.pkl"
-OUT_VIDEO = "demo/smpl_viz.mp4"
+SMPL_FILE = "demo/arch/inference_test/learner_exo/edited_motion_smpl.pkl"
+OUT_VIDEO = "demo/edited.mp4"
 FPS = 30
 W, H = 640, 640
 
