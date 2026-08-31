@@ -32,9 +32,9 @@ import pyrender
 import imageio
 
 
-# SMPL_FILE = "demo/arch/inference_test/learner_exo/wham_output_selected.pkl"
-SMPL_FILE = "demo/arch/recon_test_motion.pkl"
-OUT_VIDEO = "demo/recon.mp4"
+# SMPL_FILE = "demo/basketball_expert_smpl_v2/sfu_basketball_03_18__rep4__t23.01/wham_output_selected.pkl"
+SMPL_FILE = "demo/arch/inference_test_2/learner_exo/edited_motion_smpl.pkl"
+OUT_VIDEO = "demo/edited2.mp4"
 FPS = 30
 W, H = 640, 640
 

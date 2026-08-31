@@ -7,8 +7,8 @@ from pose_tokenizer import poseTokenizer
 from data_utils import smplPoseLoader
 
 def test_autoencoder_reconstruction(
-    checkpoint_path="demo/arch/tokenizer_ckpts_v2/pose_tokenizer_epoch_500.pth",
-    input_motion_path="demo/arch/inference_test/learner_exo/wham_output_selected.pkl",
+    checkpoint_path="demo/arch/tokenizer_ckpts_v2/pose_tokenizer_epoch_1000.pth",
+    input_motion_path="demo/basketball_expert_smpl_v2/sfu_basketball_03_18__rep4__t23.01/wham_output_selected.pkl",
     output_recon_path="demo/arch/recon_test_motion.pkl",
     target_len=90,
     device="cuda" if torch.cuda.is_available() else "cpu"

@@ -7,8 +7,8 @@ building a pose tokenizer which has-
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import math
-
 
 
 '''
@@ -114,24 +114,56 @@ class poseTokenizer(nn.Module):
         
         
 
+    # def quantize(self, z, codebook): #function for a single codebook
+    #     #calculate z^2
+    #     B, T, D = z.shape
+    #     z_flat = z.reshape(-1, D) #(B*T, D)
+    #     z_sq = torch.sum(z_flat ** 2, dim=-1, keepdim=True) #[B*T, 1]
+        
+    #     #calc e^2, for codebook -> [1, K]
+    #     e_sq = torch.sum(codebook.weight ** 2, dim=-1, keepdim = True).t() #for transposing
+        
+    #     #(z . e): shape [B*T, K]
+    #     ze_dot = torch.matmul(z_flat, codebook.weight.t())
+        
+    #     #l2 dist
+    #     dist = z_sq + e_sq - 2 * ze_dot
+        
+    #     indices = torch.argmin(dist, dim=-1) #(b*t)
+    #     #lookup
+    #     z_q = codebook(indices).view(B, T, D)
+        
+    #     #loss- codebook + commitment
+    #     loss = torch.mean((z_q - z.detach()) ** 2) + 0.25 * torch.mean((z_q.detach() - z) ** 2)
+        
+    #     #straight thru estimator(for backprop trick)
+    #     z_q = z + (z_q - z).detach()
+        
+    #     return z_q, loss, indices.view(B, T)
+
     def quantize(self, z, codebook): #function for a single codebook
         #calculate z^2
         B, T, D = z.shape
         z_flat = z.reshape(-1, D) #(B*T, D)
+        z_flat = F.normalize(z_flat, dim=-1)  #unit-norm so the encoder can't drift away from the codebook's scale
+        #NOTE: peform this unit_norm in the motion infiller training too!
+        
+        codebook_weight = F.normalize(codebook.weight, dim=-1)
         z_sq = torch.sum(z_flat ** 2, dim=-1, keepdim=True) #[B*T, 1]
         
         #calc e^2, for codebook -> [1, K]
-        e_sq = torch.sum(codebook.weight ** 2, dim=-1, keepdim = True).t() #for transposing
+        e_sq = torch.sum(codebook_weight ** 2, dim=-1, keepdim = True).t() #for transposing
         
         #(z . e): shape [B*T, K]
-        ze_dot = torch.matmul(z_flat, codebook.weight.t())
+        ze_dot = torch.matmul(z_flat, codebook_weight.t())
         
         #l2 dist
         dist = z_sq + e_sq - 2 * ze_dot
         
         indices = torch.argmin(dist, dim=-1) #(b*t)
         #lookup
-        z_q = codebook(indices).view(B, T, D)
+        z_q = codebook_weight[indices].view(B, T, D)
+        z = z_flat.view(B, T, D)
         
         #loss- codebook + commitment
         loss = torch.mean((z_q - z.detach()) ** 2) + 0.25 * torch.mean((z_q.detach() - z) ** 2)
@@ -140,7 +172,6 @@ class poseTokenizer(nn.Module):
         z_q = z + (z_q - z).detach()
         
         return z_q, loss, indices.view(B, T)
-    
 
         
         

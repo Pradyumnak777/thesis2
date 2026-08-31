@@ -59,7 +59,7 @@ if __name__ == "__main__":
     ROOT_DIR = "demo/basketball_expert_smpl_v2"
     TARGET_LEN = 90
     BATCH_SIZE = 16
-    NUM_EPOCHS = 300
+    NUM_EPOCHS = 800
     LR = 1e-4
     TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v2/pose_tokenizer_epoch_500.pth"
     SAVE_DIR = "demo/arch/infiller_ckpts_v2"
@@ -103,7 +103,7 @@ if __name__ == "__main__":
         running_acc2 = 0.0
         total_masked_tokens = 0
 
-        for batch_idx, batch_x in enumerate(train_loader):
+        for batch_idx, (batch_x, _) in enumerate(train_loader):
             batch_x = batch_x.to(device)  # [B, T, 69]
 
             # extract discrete tokens using frozen tokenizer
@@ -154,7 +154,7 @@ if __name__ == "__main__":
         print(f"Epoch [{epoch:03d}/{NUM_EPOCHS:03d}] | MLM Loss: {avg_loss:.4f} | Codebook 1 Acc: {avg_acc1:.2f}% | Codebook 2 Acc: {avg_acc2:.2f}%")
 
         # save periodic checkpoints
-        if epoch % 30 == 0 or epoch == NUM_EPOCHS:
+        if epoch % 80 == 0 or epoch == NUM_EPOCHS:
             ckpt_path = os.path.join(SAVE_DIR, f"motion_infiller_epoch_{epoch}.pth")
             torch.save({
                 'epoch': epoch,

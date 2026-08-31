@@ -58,6 +58,16 @@ class smplPoseLoader(Dataset):
         motion_sequence = np.concatenate([trans, root_orient, body_pose], axis=-1)
         return motion_sequence.astype(np.float32)
 
+    def _extract_betas(self, pkl_data):
+        """
+        SMPL shape params for this clip's subject, needed for the PoseGPT-style
+        vertex loss (mesh forward pass). WHAM stores one betas vector per frame;
+        average them since shape is constant for a subject within a clip.
+        """
+        betas = pkl_data['betas']
+        betas = betas.mean(axis=0) if betas.ndim == 2 else betas
+        return betas.astype(np.float32)
+
     def __getitem__(self, idx):
         file_path = self.file_list[idx]
         
@@ -65,6 +75,7 @@ class smplPoseLoader(Dataset):
             data = joblib.load(f)
             
         motion = self._extract_and_format_poses(data)  # [T_raw, 69]
+        betas = self._extract_betas(data)  # [10]
         seq_len = motion.shape[0]
         
         # 2. Adjust sequence to fixed target_len (T = 90)
@@ -81,8 +92,8 @@ class smplPoseLoader(Dataset):
             last_frame = np.tile(motion[-1:], (pad_len, 1))
             motion = np.concatenate([motion, last_frame], axis=0)
             
-        # Convert to float tensor: [target_len, 69]
-        return torch.tensor(motion, dtype=torch.float32)
+        # Convert to float tensor: [target_len, 69], and betas: [10]
+        return torch.tensor(motion, dtype=torch.float32), torch.tensor(betas, dtype=torch.float32)
 
 
 def get_dataloader(root_dir=ROOT, target_len=90, batch_size=16, shuffle=True, num_workers=2):
