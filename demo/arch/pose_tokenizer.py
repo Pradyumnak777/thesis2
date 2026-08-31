@@ -140,7 +140,8 @@ class poseTokenizer(nn.Module):
         z_q = z + (z_q - z).detach()
         
         return z_q, loss, indices.view(B, T)
-        
+    
+
         
         
     def forward(self, x):

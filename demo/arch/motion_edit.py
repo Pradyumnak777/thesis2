@@ -22,10 +22,10 @@ import torch.nn as nn
 from motion_infiller import MotionInfiller
 from train_infiller import get_kinematic_peaks, create_masked_inputs
 
-VID_PATH = Path("dataset_prep/dataset_out/val/unc_basketball_02-24-23_01_34-----18-----unc_basketball_03-30-23_02_4-----0-----Arms/learner_exo.mp4")
+VID_PATH = Path("dataset_prep/dataset_out/val/sfu_basketball012_4-----20-----unc_basketball_03-30-23_02_4-----0-----Arms/learner_exo.mp4")
 OUT_DIR = Path("demo/arch/inference_test") 
-TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts/pose_tokenizer_epoch_400.pth"
-INFILLER_CKPT = "demo/arch/infiller_ckpts/motion_infiller_epoch_140.pth"
+TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v2/pose_tokenizer_epoch_500.pth"
+INFILLER_CKPT = "demo/arch/infiller_ckpts_v2/motion_infiller_epoch_300.pth"
 # OUT_DIR = (OUT_DIR / VID_PATH.stem).resolve()
 
 def jumphot_heuristic(BASE):#base is the path to the smpl directory, NOT the smpl file itself!
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     for param in tokenizer.parameters():
         param.requires_grad = False
         
-    infiller = MotionInfiller(vocab_size=256, emb_dim=256, hidden_dim=512, num_layers=12, nhead=8).to(device)
+    infiller = MotionInfiller(vocab_size=256, emb_dim=128, hidden_dim=256, num_layers=12, nhead=8).to(device)
     ckpt_inf = torch.load(INFILLER_CKPT, map_location=device)
     infiller.load_state_dict(ckpt_inf['model_state_dict'])
     infiller.eval()
@@ -138,7 +138,8 @@ if __name__ == "__main__":
             clean_indices, peak_indices, mask_token_id=256, span_radius=8
         )
         
-        logits1, logits2 = infiller(masked_tokens)  # [B, T, 256], [B, T, 256]
+        with torch.no_grad():
+            logits1, logits2 = infiller(masked_tokens)  # [B, T, 256], [B, T, 256]
         '''
         #NOTE: logits output is:
         For every frame $t$, the model outputs 256 floating-point values representing how confident it is 
@@ -151,19 +152,25 @@ if __name__ == "__main__":
         # Splice: keep novice tokens outside mask, insert predicted expert tokens inside mask
         edited_tokens = clean_indices.clone()
         edited_tokens[mask_labels] = pred_tokens[mask_labels]
+
+        n_masked_positions = mask_labels.sum().item()
+        n_changed = ((edited_tokens != clean_indices) & mask_labels.unsqueeze(-1)).sum().item()
+        print(f"infiller changed {n_changed}/{n_masked_positions * 2} token values inside the mask "
+              f"({n_masked_positions} masked frames)")
         
         '''
         pass thru decoder
         '''
-        #Lookup continuous vectors in frozen Stage 1 codebooks
-        z_q1 = tokenizer.c1(edited_tokens[:, :, 0])  # [1, 90, 128]
-        z_q2 = tokenizer.c2(edited_tokens[:, :, 1])  # [1, 90, 128]
-        z_q = torch.cat([z_q1, z_q2], dim=-1)         # [1, 90, 256]
-        
-        h_dec = tokenizer.decoder_proj(z_q)
-        h_dec = tokenizer.pos_encoder(h_dec)
-        h_dec_out = tokenizer.transformer_decoder(h_dec)
-        edited_motion = tokenizer.output_proj_decoder(h_dec_out)
+        with torch.no_grad():
+            #Lookup continuous vectors in frozen Stage 1 codebooks
+            z_q1 = tokenizer.c1(edited_tokens[:, :, 0])  # [1, 90, 128]
+            z_q2 = tokenizer.c2(edited_tokens[:, :, 1])  # [1, 90, 128]
+            z_q = torch.cat([z_q1, z_q2], dim=-1)         # [1, 90, 256]
+
+            h_dec = tokenizer.decoder_proj(z_q)
+            h_dec = tokenizer.pos_encoder(h_dec)
+            h_dec_out = tokenizer.transformer_decoder(h_dec)
+            edited_motion = tokenizer.output_proj_decoder(h_dec_out)
         
         # [1, 90, 69] -> trans (3), root_orient (3), body_pose (63)
         edited_motion_np = edited_motion.squeeze(0).cpu().numpy()
@@ -182,21 +189,50 @@ if __name__ == "__main__":
         if t_raw >= target_len:
             start_frame = (t_raw - target_len) // 2
             end_frame = start_frame + target_len
-            full_body_edited[start_frame:end_frame] = edited_body_poses[:(end_frame - start_frame)]
+
+            #only overwrite the masked span -- everything else stays as the original novice pose
+            mask_np = mask_labels.squeeze(0).cpu().numpy()  # [90] bool
+            window = full_body_original[start_frame:end_frame].copy()
+            window[mask_np] = edited_body_poses[mask_np]
+
+            full_body_edited[start_frame:end_frame] = window
         else:
+            #short-clip fallback -- rare now that clips are real 90-frame windows, left unmasked
+            start_frame, end_frame = 0, t_raw
+            mask_np = np.zeros(t_raw, dtype=bool)
             full_body_edited[:t_raw] = edited_body_poses[:t_raw]
-        
+
         edited_pose_world = full_pose.copy()
         edited_pose_world[:, 3:66] = full_body_edited
-        
+
         output_dict = {
             'trans_world': full_trans,
-            # 'root_orient': full_root_orient,
             'pose_world': edited_pose_world,
-            'betas': selected_person.get('betas', None)
+            'betas': selected_person.get('betas', None),
+            'edit_start_frame': start_frame,
+            'edit_end_frame': end_frame,
+            'edit_mask': mask_np,
         }
 
         save_file = ACTOR_DIR / "edited_motion_smpl.pkl"
         joblib.dump(output_dict, save_file)
         print(f"Saved edited motion parameters to {save_file}")
-        break
+
+        #--- diagnostics: isolate whether the tokenizer or the infiller is the remaining issue ---
+        with torch.no_grad():
+            recon, _, _ = tokenizer(data)
+        recon_body = recon.squeeze(0).cpu().numpy()[:, 6:69]  # pure round-trip, no infiller involved
+
+        n_frames_to_write = min(end_frame, t_raw) - start_frame
+        roundtrip_full = full_pose.copy()
+        roundtrip_full[start_frame:start_frame + n_frames_to_write, 3:66] = recon_body[:n_frames_to_write]
+        joblib.dump({'trans_world': full_trans, 'pose_world': roundtrip_full,
+                     'betas': selected_person.get('betas', None)},
+                    ACTOR_DIR / "viz_roundtrip.pkl")
+
+        c1_used = len(set(clean_indices[..., 0].flatten().tolist()))
+        c2_used = len(set(clean_indices[..., 1].flatten().tolist()))
+        print(f"raw frame count for this learner clip: {t_raw} (target_len is 90)")
+        print(f"codebook usage on this clip: c1 {c1_used}/256, c2 {c2_used}/256")
+        print(f"tokenizer round-trip body MAE (rad): "
+              f"{np.abs(recon_body[:n_frames_to_write] - full_body_original[start_frame:start_frame+n_frames_to_write]).mean():.4f}")
