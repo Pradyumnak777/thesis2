@@ -14,28 +14,39 @@ the pelvis translation across frames.
 these are some example hehuristics of what could be checked. or simply, translation of the pelvis,
 which seems to be a unified heuristic could be better to start off with
 '''
+import argparse
+import os
 import joblib
 import time
 from tqdm import tqdm
 import subprocess
 from pathlib import Path
-from inspect_pose_demo import heuristic_pose_selector
+from inspect_pose_demo import jumphot_heuristic
+
+ap = argparse.ArgumentParser()
+ap.add_argument("--gpu", type=int, required=True, help="physical GPU id this shard runs on")
+ap.add_argument("--shard-id", type=int, default=0)
+ap.add_argument("--num-shards", type=int, default=1)
+args = ap.parse_args()
 
 WHAM_ROOT = Path("WHAM")
-VIDEO_DIR = Path("demo/demo_basketball_expert")
-OUT_ROOT = Path("demo/basketball_expert_smpl")
+VIDEO_DIR = Path("demo/basketball_expert_clips/Mid-range jump shot")
+OUT_ROOT = Path("demo/basketball_expert_smpl_v2")
 
 OUT_ROOT.mkdir(exist_ok=True)
 
 videos = sorted(VIDEO_DIR.glob("*.mp4"))
-print(f"found {len(videos)} clips in {VIDEO_DIR}/")
+videos = videos[args.shard_id::args.num_shards]  # interleaved slice -- this shard's share
+print(f"shard {args.shard_id}/{args.num_shards} on gpu {args.gpu}: {len(videos)} clips")
 
-for video_path in tqdm(videos, desc="WHAM"):
+env = os.environ.copy()
+env["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
+
+for video_path in tqdm(videos, desc=f"WHAM[gpu{args.gpu}]"):
     video_path = video_path.resolve()
     out_dir = (OUT_ROOT / video_path.stem).resolve()
-    result_dir = out_dir
 
-    if (result_dir / "wham_output.pkl").exists():
+    if (out_dir / "wham_output.pkl").exists():
         tqdm.write(f"skipping (already done): {video_path.name}")
         continue
 
@@ -43,27 +54,18 @@ for video_path in tqdm(videos, desc="WHAM"):
 
     t0 = time.perf_counter()
     subprocess.run(
-        [
-            "python", "demo.py",
-            "--video", str(video_path),
-            "--output_pth", str(OUT_ROOT.resolve()),
-            "--save_pkl",
-        ],
-        cwd=WHAM_ROOT,
-        check=True,
+        ["python", "demo.py", "--video", str(video_path),
+         "--output_pth", str(OUT_ROOT.resolve()), "--save_pkl"],
+        cwd=WHAM_ROOT, env=env, check=True,
     )
     wham_time = time.perf_counter() - t0
 
     t0 = time.perf_counter()
-    
-    '''
-    simple heuristic to select only actor pose
-    '''
-    best_idx, wham_output = heuristic_pose_selector(str(result_dir))
+    best_idx, wham_output = jumphot_heuristic(str(out_dir))
     selected_person = wham_output[best_idx]
     joblib.dump(selected_person, out_dir / "wham_output_selected.pkl")
     select_time = time.perf_counter() - t0
 
     tqdm.write(f"{video_path.name}: wham {wham_time:.1f}s, select {select_time:.1f}s")
 
-print("done")
+print(f"shard {args.shard_id} done")

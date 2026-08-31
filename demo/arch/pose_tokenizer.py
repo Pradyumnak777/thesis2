@@ -9,6 +9,43 @@ import torch
 import torch.nn as nn
 import math
 
+
+
+'''
+future work below
+'''
+import numpy as np
+from scipy.spatial.transform import Rotation as R
+
+# def canonicalize_clip(trans_world, pose_world):
+#     """
+#     trans_world: (T, 3)
+#     pose_world:  (T, 72) -- [:, :3] is root_orient (axis-angle), [:, 3:] is body_pose
+#     Removes each clip's arbitrary starting position and heading, so every
+#     clip starts at the origin facing the same direction. Vertical (y) is
+#     left untouched -- WHAM's gravity alignment already makes that comparable
+#     across clips without any extra work.
+#     """
+#     trans = trans_world.copy()
+#     pose = pose_world.copy()
+
+#     # 1. re-center: subtract frame-0 position (horizontal only, keep height as-is)
+#     origin = trans[0].copy()
+#     origin[1] = 0.0  # don't touch vertical
+#     trans -= origin
+
+#     # 2. re-heading: cancel frame-0 yaw so every clip starts facing the same way
+#     root0 = R.from_rotvec(pose[0, :3])
+#     yaw0 = root0.as_euler("yxz")[0]        # heading component (rotation about up-axis)
+#     undo_yaw = R.from_euler("y", -yaw0)
+
+#     trans = undo_yaw.apply(trans)          # rotate the horizontal trajectory
+#     for t in range(pose.shape[0]):
+#         root_t = R.from_rotvec(pose[t, :3])
+#         pose[t, :3] = (undo_yaw * root_t).as_rotvec()  # rotate root orientation
+
+#     return trans, pose
+
 class positionalEncoding(nn.Module):
     def __init__(self, d_model, max_len = 500):
         super().__init__()

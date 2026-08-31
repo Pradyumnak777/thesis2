@@ -1,0 +1,692 @@
+{
+  "sfu_basketball_02_20": {
+    "take_uid": "8ce228af-9910-47c8-a0cd-021005d932b2",
+    "root_dir": "takes/sfu_basketball_02_20",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 47.0,
+    "task_start_sec": 0.40175,
+    "task_end_sec": 46.81992,
+    "split": "train"
+  },
+  "sfu_basketball_03_12": {
+    "take_uid": "65ccae71-c7d1-4168-aef5-4cc8db12ef3f",
+    "root_dir": "takes/sfu_basketball_03_12",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 47.166666666666664,
+    "task_start_sec": 0.28253,
+    "task_end_sec": 46.9,
+    "split": "train"
+  },
+  "sfu_basketball_03_18": {
+    "take_uid": "15280378-3659-4d3d-b6b7-fa243709c89c",
+    "root_dir": "takes/sfu_basketball_03_18",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 41.7,
+    "task_start_sec": 1.01092,
+    "task_end_sec": 41.2,
+    "split": "train"
+  },
+  "sfu_basketball_03_34": {
+    "take_uid": "d381563b-a0e4-4792-ac84-cde3b716ee9d",
+    "root_dir": "takes/sfu_basketball_03_34",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 42.56666666666667,
+    "task_start_sec": 0.27757,
+    "task_end_sec": 42.16667,
+    "split": "train"
+  },
+  "sfu_basketball_03_64": {
+    "take_uid": "7437672b-ae56-4ddf-a1ae-ddc4a4444151",
+    "root_dir": "takes/sfu_basketball_03_64",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 42.93333333333333,
+    "task_start_sec": 0.26205,
+    "task_end_sec": 42.76667,
+    "split": "train"
+  },
+  "sfu_basketball_03_84": {
+    "take_uid": "6e44dfad-517d-4ef7-8999-938f5c66f8b7",
+    "root_dir": "takes/sfu_basketball_03_84",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 14.533333333333333,
+    "task_start_sec": 0.28637,
+    "task_end_sec": 14.27083,
+    "split": "train"
+  },
+  "sfu_basketball_11_40": {
+    "take_uid": "56cdd9e0-3709-412d-9441-3035042a2bef",
+    "root_dir": "takes/sfu_basketball_11_40",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 7.1,
+    "task_start_sec": 2.55522,
+    "task_end_sec": 6.76667,
+    "split": "train"
+  },
+  "unc_basketball_02-24-23_01_19": {
+    "take_uid": "1c9dae64-e7d0-415b-ae95-99ee78eaae90",
+    "root_dir": "takes/unc_basketball_02-24-23_01_19",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 54.93333333333333,
+    "task_start_sec": 1.07416,
+    "task_end_sec": 50.58244,
+    "split": "val"
+  },
+  "unc_basketball_02-24-23_01_21": {
+    "take_uid": "b9552cbe-2158-4349-8e94-c7cf0de07099",
+    "root_dir": "takes/unc_basketball_02-24-23_01_21",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 53.0,
+    "task_start_sec": 0.9916,
+    "task_end_sec": 52.6,
+    "split": "val"
+  },
+  "unc_basketball_03-16-23_01_27": {
+    "take_uid": "17a54758-60c2-49eb-8384-975df7fdace6",
+    "root_dir": "takes/unc_basketball_03-16-23_01_27",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 47.733333333333334,
+    "task_start_sec": 0.80291,
+    "task_end_sec": 47.10001,
+    "split": "val"
+  },
+  "unc_basketball_03-16-23_01_30": {
+    "take_uid": "17bfe6eb-89de-44b3-bd2c-35874f09982a",
+    "root_dir": "takes/unc_basketball_03-16-23_01_30",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 58.166666666666664,
+    "task_start_sec": 0.35768,
+    "task_end_sec": 57.11604,
+    "split": "val"
+  },
+  "unc_basketball_03-16-23_01_33": {
+    "take_uid": "b63d213f-25ae-41bb-8719-01efd84dbe17",
+    "root_dir": "takes/unc_basketball_03-16-23_01_33",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 57.63333333333333,
+    "task_start_sec": 0.4185,
+    "task_end_sec": 56.97088,
+    "split": "val"
+  },
+  "unc_basketball_03-30-23_01_13": {
+    "take_uid": "b8fb45e0-7280-4dce-a536-1c3b3c97d350",
+    "root_dir": "takes/unc_basketball_03-30-23_01_13",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 77.23333333333333,
+    "task_start_sec": 0.93778,
+    "task_end_sec": 76.26105,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_01_16": {
+    "take_uid": "c893204e-b2c6-4c8b-985a-5413f677ba78",
+    "root_dir": "takes/unc_basketball_03-30-23_01_16",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 64.03333333333333,
+    "task_start_sec": 0.55709,
+    "task_end_sec": 62.87674,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_01_41": {
+    "take_uid": "93069038-046e-4cf5-9b99-17e0b724b3cf",
+    "root_dir": "takes/unc_basketball_03-30-23_01_41",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 29.166666666666668,
+    "task_start_sec": 0.62726,
+    "task_end_sec": 28.61667,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_01_42": {
+    "take_uid": "51af39f0-6bb6-4ac1-bd9e-694c56411f0e",
+    "root_dir": "takes/unc_basketball_03-30-23_01_42",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 67.16666666666667,
+    "task_start_sec": 0.6067,
+    "task_end_sec": 66.39464,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_01_45": {
+    "take_uid": "9a2bed9c-380d-4173-a3ce-c5763b02fffd",
+    "root_dir": "takes/unc_basketball_03-30-23_01_45",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 70.7,
+    "task_start_sec": 0.91325,
+    "task_end_sec": 69.96475,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_01_48": {
+    "take_uid": "5992df76-640c-49ea-83c0-d4095509ba9c",
+    "root_dir": "takes/unc_basketball_03-30-23_01_48",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 65.26666666666667,
+    "task_start_sec": 0.89472,
+    "task_end_sec": 64.20001,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_01_51": {
+    "take_uid": "aa5f66da-4e3b-47ef-b058-8d5c591a84d7",
+    "root_dir": "takes/unc_basketball_03-30-23_01_51",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 61.53333333333333,
+    "task_start_sec": 0.68666,
+    "task_end_sec": 60.62397,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_01_7": {
+    "take_uid": "19276801-7c0e-475b-af01-d97baba8bd51",
+    "root_dir": "takes/unc_basketball_03-30-23_01_7",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 60.766666666666666,
+    "task_start_sec": 1.14251,
+    "task_end_sec": 43.24269,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_02_10": {
+    "take_uid": "96abbf92-97cf-406b-910d-59d139c9da79",
+    "root_dir": "takes/unc_basketball_03-30-23_02_10",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 58.46666666666667,
+    "task_start_sec": 2.24725,
+    "task_end_sec": 57.66663,
+    "split": "val"
+  },
+  "unc_basketball_03-30-23_02_13": {
+    "take_uid": "3108d464-d7a2-4bd8-b4e8-b9216ca6c49f",
+    "root_dir": "takes/unc_basketball_03-30-23_02_13",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 57.1,
+    "task_start_sec": 1.0428,
+    "task_end_sec": 56.30001,
+    "split": "val"
+  },
+  "unc_basketball_03-30-23_02_16": {
+    "take_uid": "0f43bce7-5cd0-4ff2-8eae-466257d552b6",
+    "root_dir": "takes/unc_basketball_03-30-23_02_16",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 58.63333333333333,
+    "task_start_sec": 0.33835,
+    "task_end_sec": 58.08776,
+    "split": "val"
+  },
+  "unc_basketball_03-30-23_02_19": {
+    "take_uid": "1b9cb258-fd05-40d9-964e-7a096a85540a",
+    "root_dir": "takes/unc_basketball_03-30-23_02_19",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 60.93333333333333,
+    "task_start_sec": 0.57778,
+    "task_end_sec": 59.65769,
+    "split": "val"
+  },
+  "unc_basketball_03-30-23_02_23": {
+    "take_uid": "d4a1ea83-80ca-4540-95dd-d1e2af40328a",
+    "root_dir": "takes/unc_basketball_03-30-23_02_23",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 55.766666666666666,
+    "task_start_sec": 1.52016,
+    "task_end_sec": 54.65159,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_02_26": {
+    "take_uid": "8c917b9b-6eb4-46e0-864a-364656907738",
+    "root_dir": "takes/unc_basketball_03-30-23_02_26",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 55.6,
+    "task_start_sec": 0.62554,
+    "task_end_sec": 54.83919,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_02_29": {
+    "take_uid": "909679ff-1c53-496c-abfa-fd1bab12d325",
+    "root_dir": "takes/unc_basketball_03-30-23_02_29",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 63.06666666666667,
+    "task_start_sec": 0.4534,
+    "task_end_sec": 62.46667,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_02_32": {
+    "take_uid": "06b3190e-723f-4712-9892-aab9ba1e19e1",
+    "root_dir": "takes/unc_basketball_03-30-23_02_32",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 68.83333333333333,
+    "task_start_sec": 0.82886,
+    "task_end_sec": 67.95551,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_02_35": {
+    "take_uid": "8a0ea233-beeb-42cf-84b8-d25bda4ad967",
+    "root_dir": "takes/unc_basketball_03-30-23_02_35",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 60.7,
+    "task_start_sec": 0.49998,
+    "task_end_sec": 59.83334,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_02_38": {
+    "take_uid": "87406a69-c2ba-494b-8bda-184f91e2c205",
+    "root_dir": "takes/unc_basketball_03-30-23_02_38",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 69.96666666666667,
+    "task_start_sec": 0.53331,
+    "task_end_sec": 68.93334,
+    "split": "train"
+  },
+  "unc_basketball_03-30-23_02_4": {
+    "take_uid": "09417ca4-3572-4ba1-a1db-7eaf3bd0b1c8",
+    "root_dir": "takes/unc_basketball_03-30-23_02_4",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 57.4,
+    "task_start_sec": 0.68597,
+    "task_end_sec": 57.03334,
+    "split": "val"
+  },
+  "unc_basketball_03-30-23_02_7": {
+    "take_uid": "60074d58-586f-4da8-b2c5-426c58c5c060",
+    "root_dir": "takes/unc_basketball_03-30-23_02_7",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 71.86666666666666,
+    "task_start_sec": 11.56475,
+    "task_end_sec": 70.88327,
+    "split": "val"
+  },
+  "unc_basketball_03-31-23_01_10": {
+    "take_uid": "a6500813-e923-44e8-9876-b8f6f2fc15b2",
+    "root_dir": "takes/unc_basketball_03-31-23_01_10",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 50.266666666666666,
+    "task_start_sec": 1.02294,
+    "task_end_sec": 49.9,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_13": {
+    "take_uid": "ede28f52-3ab0-4da8-808e-33ba5a1fae28",
+    "root_dir": "takes/unc_basketball_03-31-23_01_13",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 55.3,
+    "task_start_sec": 0.02,
+    "task_end_sec": 54.86667,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_16": {
+    "take_uid": "b9bad7dc-c6f5-4488-b9d0-b787625b674f",
+    "root_dir": "takes/unc_basketball_03-31-23_01_16",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 53.766666666666666,
+    "task_start_sec": 0.49415,
+    "task_end_sec": 52.70001,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_19": {
+    "take_uid": "e08db0a4-e257-46e0-8880-640415b05976",
+    "root_dir": "takes/unc_basketball_03-31-23_01_19",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 56.03333333333333,
+    "task_start_sec": 1.20282,
+    "task_end_sec": 54.79135,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_4": {
+    "take_uid": "3467af8b-50c5-486e-8ff8-6a1401849bb9",
+    "root_dir": "takes/unc_basketball_03-31-23_01_4",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 77.86666666666666,
+    "task_start_sec": 3.49484,
+    "task_end_sec": 76.71593,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_42": {
+    "take_uid": "f206f522-f635-49c6-8dc4-563199704bb8",
+    "root_dir": "takes/unc_basketball_03-31-23_01_42",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 54.93333333333333,
+    "task_start_sec": 0.95825,
+    "task_end_sec": 54.08567,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_45": {
+    "take_uid": "f85ff6cc-b530-49fe-89e4-ae8533a4d47e",
+    "root_dir": "takes/unc_basketball_03-31-23_01_45",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 45.7,
+    "task_start_sec": 2.19127,
+    "task_end_sec": 45.01207,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_48": {
+    "take_uid": "876aae71-1ed8-4648-bd13-bce01b18698d",
+    "root_dir": "takes/unc_basketball_03-31-23_01_48",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 53.333333333333336,
+    "task_start_sec": 0.81957,
+    "task_end_sec": 52.50001,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_51": {
+    "take_uid": "b09efa75-5692-4490-bdf1-b3b2c0fed141",
+    "root_dir": "takes/unc_basketball_03-31-23_01_51",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 44.766666666666666,
+    "task_start_sec": 0.86665,
+    "task_end_sec": 44.13334,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_54": {
+    "take_uid": "e0b36364-fbdc-4878-8dca-9a448856f79f",
+    "root_dir": "takes/unc_basketball_03-31-23_01_54",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 46.3,
+    "task_start_sec": 0.80908,
+    "task_end_sec": 45.41303,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_57": {
+    "take_uid": "19653b56-4c16-407d-999b-8bae93fce633",
+    "root_dir": "takes/unc_basketball_03-31-23_01_57",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 48.2,
+    "task_start_sec": 1.14176,
+    "task_end_sec": 47.55327,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_01_7": {
+    "take_uid": "9fe91f54-5d6c-43ba-aed0-cd8b1aae5d98",
+    "root_dir": "takes/unc_basketball_03-31-23_01_7",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 48.8,
+    "task_start_sec": 2.0263,
+    "task_end_sec": 47.95571,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_10": {
+    "take_uid": "8e5d6ad7-f48c-40e8-bf02-05ac74c2d844",
+    "root_dir": "takes/unc_basketball_03-31-23_02_10",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 51.06666666666667,
+    "task_start_sec": 1.04505,
+    "task_end_sec": 50.30001,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_13": {
+    "take_uid": "eb38a264-e494-4a9c-9115-f55ea6754e39",
+    "root_dir": "takes/unc_basketball_03-31-23_02_13",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 56.166666666666664,
+    "task_start_sec": 1.09021,
+    "task_end_sec": 55.31568,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_16": {
+    "take_uid": "664e91a2-642d-47c2-9e89-44090af6af92",
+    "root_dir": "takes/unc_basketball_03-31-23_02_16",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 48.36666666666667,
+    "task_start_sec": 0.98955,
+    "task_end_sec": 46.90971,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_19": {
+    "take_uid": "d4bfd025-0c2a-46e7-8638-c9fecda09f42",
+    "root_dir": "takes/unc_basketball_03-31-23_02_19",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 55.766666666666666,
+    "task_start_sec": 0.59337,
+    "task_end_sec": 53.1898,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_23": {
+    "take_uid": "a1b56b36-68f6-4238-b5bf-a830dc8758bf",
+    "root_dir": "takes/unc_basketball_03-31-23_02_23",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 250.63333333333333,
+    "task_start_sec": 1.04811,
+    "task_end_sec": 248.96668,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_25": {
+    "take_uid": "6ddd7cf1-02f0-4d46-837f-8aaddd1236c7",
+    "root_dir": "takes/unc_basketball_03-31-23_02_25",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 25.333333333333332,
+    "task_start_sec": 3.67878,
+    "task_end_sec": 24.79256,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_27": {
+    "take_uid": "1032ae70-ce9b-4e6e-8b59-52a19b1f5b52",
+    "root_dir": "takes/unc_basketball_03-31-23_02_27",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 60.4,
+    "task_start_sec": 3.04149,
+    "task_end_sec": 58.11888,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_31": {
+    "take_uid": "26b467da-4973-4b8a-9bd7-cf9929927bfd",
+    "root_dir": "takes/unc_basketball_03-31-23_02_31",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 47.86666666666667,
+    "task_start_sec": 0.74895,
+    "task_end_sec": 47.16667,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_34": {
+    "take_uid": "87b87124-24b7-4098-9c28-21545a981768",
+    "root_dir": "takes/unc_basketball_03-31-23_02_34",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 50.8,
+    "task_start_sec": 0.8333,
+    "task_end_sec": 49.76668,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_37": {
+    "take_uid": "393deccc-6300-484f-a6dd-a961d110b505",
+    "root_dir": "takes/unc_basketball_03-31-23_02_37",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 42.5,
+    "task_start_sec": 1.65522,
+    "task_end_sec": 41.12753,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_4": {
+    "take_uid": "c2374b84-5d13-4bcb-a320-b375851245e4",
+    "root_dir": "takes/unc_basketball_03-31-23_02_4",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 55.36666666666667,
+    "task_start_sec": 0.89852,
+    "task_end_sec": 54.10001,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_40": {
+    "take_uid": "54bae34c-17e7-4d4c-baaa-dba0e23301a5",
+    "root_dir": "takes/unc_basketball_03-31-23_02_40",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 51.8,
+    "task_start_sec": 1.41653,
+    "task_end_sec": 50.83334,
+    "split": "train"
+  },
+  "unc_basketball_03-31-23_02_7": {
+    "take_uid": "6d51a3bd-9080-44a4-89d2-b1df5239ca01",
+    "root_dir": "takes/unc_basketball_03-31-23_02_7",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 50.333333333333336,
+    "task_start_sec": 0.9,
+    "task_end_sec": 49.66667,
+    "split": "train"
+  },
+  "uniandes_basketball_001_32": {
+    "take_uid": "6e252fac-4cec-4abe-bc4c-72b56b44fbcb",
+    "root_dir": "takes/uniandes_basketball_001_32",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 78.23333333333333,
+    "task_start_sec": 4.53899,
+    "task_end_sec": 76.90589,
+    "split": "train"
+  },
+  "uniandes_basketball_001_35": {
+    "take_uid": "ca6bb6c4-1bf4-4253-926c-803881a165be",
+    "root_dir": "takes/uniandes_basketball_001_35",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 79.6,
+    "task_start_sec": 1.19667,
+    "task_end_sec": 79.1,
+    "split": "train"
+  },
+  "uniandes_basketball_002_4": {
+    "take_uid": "f69df63c-9cd3-442f-bc9b-5ba64b988da4",
+    "root_dir": "takes/uniandes_basketball_002_4",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 93.36666666666666,
+    "task_start_sec": 9.09648,
+    "task_end_sec": 92.80452,
+    "split": "train"
+  },
+  "uniandes_basketball_002_7": {
+    "take_uid": "2c17b3a3-aecf-4a18-82f4-4094b7ac166c",
+    "root_dir": "takes/uniandes_basketball_002_7",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 98.5,
+    "task_start_sec": 2.35575,
+    "task_end_sec": 96.17011,
+    "split": "train"
+  },
+  "uniandes_basketball_003_18": {
+    "take_uid": "12513260-bc8d-4cc5-a14b-c7a9012bf7d5",
+    "root_dir": "takes/uniandes_basketball_003_18",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 76.33333333333333,
+    "task_start_sec": 4.70815,
+    "task_end_sec": 70.58265,
+    "split": "train"
+  },
+  "uniandes_basketball_003_21": {
+    "take_uid": "e354f40c-75e9-4064-a911-850988e9ab9a",
+    "root_dir": "takes/uniandes_basketball_003_21",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 81.76666666666667,
+    "task_start_sec": 0.31515,
+    "task_end_sec": 70.48671,
+    "split": "train"
+  },
+  "uniandes_basketball_003_25": {
+    "take_uid": "311b89d8-9dbb-4602-8656-5b4151ad19f1",
+    "root_dir": "takes/uniandes_basketball_003_25",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 87.93333333333334,
+    "task_start_sec": 0.28263,
+    "task_end_sec": 87.5141,
+    "split": "train"
+  },
+  "uniandes_basketball_003_29": {
+    "take_uid": "1b755d8c-7351-4ad3-aff3-affe95fb1737",
+    "root_dir": "takes/uniandes_basketball_003_29",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 93.96666666666667,
+    "task_start_sec": 0.29474,
+    "task_end_sec": 93.50378,
+    "split": "train"
+  },
+  "uniandes_basketball_003_4": {
+    "take_uid": "73251f3a-238e-4dd8-8297-6fe9893239e0",
+    "root_dir": "takes/uniandes_basketball_003_4",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 108.5,
+    "task_start_sec": 0.2923,
+    "task_end_sec": 108.33334,
+    "split": "train"
+  },
+  "uniandes_basketball_003_7": {
+    "take_uid": "86578abf-a15e-44f0-9ea8-3019578c8d19",
+    "root_dir": "takes/uniandes_basketball_003_7",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 132.83333333333334,
+    "task_start_sec": 1.06079,
+    "task_end_sec": 119.65712,
+    "split": "train"
+  },
+  "uniandes_basketball_004_4": {
+    "take_uid": "c09185f6-a5d6-43ce-950f-be3cd7ba7d2f",
+    "root_dir": "takes/uniandes_basketball_004_4",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 84.13333333333334,
+    "task_start_sec": 0.90459,
+    "task_end_sec": 83.05826,
+    "split": "train"
+  },
+  "uniandes_basketball_004_8": {
+    "take_uid": "02417aaf-e818-4ec9-8731-abddcd9ac466",
+    "root_dir": "takes/uniandes_basketball_004_8",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 76.83333333333333,
+    "task_start_sec": 0.49,
+    "task_end_sec": 76.7,
+    "split": "train"
+  }
+}

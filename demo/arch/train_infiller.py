@@ -90,7 +90,7 @@ if __name__ == "__main__":
         param.requires_grad = False
 
     # 3. initialize stage 2 infiller model & optimizer
-    infiller = MotionInfiller(vocab_size=256, emb_dim=256, hidden_dim=512, num_layers=12, nhead=8).to(device)
+    infiller = MotionInfiller(vocab_size=256, emb_dim=128, hidden_dim=256, num_layers=12, nhead=8).to(device)
     optimizer = torch.optim.AdamW(infiller.parameters(), lr=LR, weight_decay=1e-2)
     criterion = nn.CrossEntropyLoss()
 

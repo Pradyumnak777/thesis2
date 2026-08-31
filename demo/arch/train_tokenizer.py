@@ -11,6 +11,12 @@ from torch.utils.data import Dataset, DataLoader
 from data_utils import smplPoseLoader
 from pose_tokenizer import poseTokenizer
 
+import debugpy
+# debugpy.listen(("127.0.0.1", 5678))
+# print("Waiting for debugger attach on port 5678...")
+# debugpy.wait_for_client()
+# print("Debugger attached! Running code...")
+
 
 if __name__ == "__main__":
     # Device configuration
@@ -18,12 +24,12 @@ if __name__ == "__main__":
     print(f"Using device: {device}")
 
     # Hyperparameters
-    ROOT_DIR = "demo/basketball_expert_smpl/Mid-range jump shot"
+    ROOT_DIR = "demo/basketball_expert_smpl_v2"
     TARGET_LEN = 90  # Tframes for jumpshot
-    BATCH_SIZE = 16
-    NUM_EPOCHS = 400
+    BATCH_SIZE = 64
+    NUM_EPOCHS = 500
     LR = 5e-5
-    SAVE_DIR = "demo/arch/tokenizer_ckpts"
+    SAVE_DIR = "demo/arch/tokenizer_ckpts_v2"
     os.makedirs(SAVE_DIR, exist_ok=True)
 
     # 1. Initialize Dataset & DataLoader
@@ -88,7 +94,7 @@ if __name__ == "__main__":
         print(f"Epoch [{epoch:03d}/{NUM_EPOCHS:03d}] | Total Loss: {avg_total:.6f} | Recon Loss: {avg_recon:.6f} | VQ Loss: {avg_vq:.6f}")
 
         # Save checkpoint periodically
-        if epoch % 40 == 0 or epoch == NUM_EPOCHS:
+        if epoch % 50 == 0 or epoch == NUM_EPOCHS:
             ckpt_path = os.path.join(SAVE_DIR, f"pose_tokenizer_epoch_{epoch}.pth")
             torch.save({
                 'epoch': epoch,
