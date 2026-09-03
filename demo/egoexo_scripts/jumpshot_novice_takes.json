@@ -1,0 +1,102 @@
+{
+  "sfu_basketball012_12": {
+    "take_uid": "b2f14b2c-292c-46ce-a4b4-95258dcf6154",
+    "root_dir": "takes/sfu_basketball012_12",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 53.733333333333334,
+    "task_start_sec": 0.39998,
+    "task_end_sec": 53.46667,
+    "split": "train"
+  },
+  "sfu_basketball012_4": {
+    "take_uid": "a3703011-35b9-4b70-964a-427e05e79a6f",
+    "root_dir": "takes/sfu_basketball012_4",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 60.766666666666666,
+    "task_start_sec": 0.26563,
+    "task_end_sec": 60.53334,
+    "split": "train"
+  },
+  "sfu_basketball012_6": {
+    "take_uid": "e9d6c233-3f56-4268-bce6-95c3ad19c77c",
+    "root_dir": "takes/sfu_basketball012_6",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 31.666666666666668,
+    "task_start_sec": 1.3648,
+    "task_end_sec": 31.66667,
+    "split": "train"
+  },
+  "sfu_basketball014_16": {
+    "take_uid": "aa0ea3a4-9d16-4614-87f4-fd1070727f39",
+    "root_dir": "takes/sfu_basketball014_16",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 51.56666666666667,
+    "task_start_sec": 0.93359,
+    "task_end_sec": 51.23334,
+    "split": "val"
+  },
+  "sfu_basketball014_6": {
+    "take_uid": "151c3bf5-fc91-4477-8fee-ec62bfa85a0d",
+    "root_dir": "takes/sfu_basketball014_6",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 52.1,
+    "task_start_sec": 0.26666,
+    "task_end_sec": 50.90001,
+    "split": "val"
+  },
+  "sfu_basketball017_12": {
+    "take_uid": "e8e45da3-20f4-42b2-b6fd-84a531706640",
+    "root_dir": "takes/sfu_basketball017_12",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 25.766666666666666,
+    "task_start_sec": 0.76664,
+    "task_end_sec": 25.23734,
+    "split": "val"
+  },
+  "sfu_basketball017_26": {
+    "take_uid": "9fa3de38-5dfe-47d7-8b53-ebae900dcdb5",
+    "root_dir": "takes/sfu_basketball017_26",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 47.36666666666667,
+    "task_start_sec": 0.24369,
+    "task_end_sec": 46.63334,
+    "split": "val"
+  },
+  "sfu_basketball_08_48": {
+    "take_uid": "d7be23cc-bcc6-4612-b1b2-acf79aeff6db",
+    "root_dir": "takes/sfu_basketball_08_48",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 57.1,
+    "task_start_sec": 0.28521,
+    "task_end_sec": 56.48029,
+    "split": "train"
+  },
+  "sfu_basketball_09_34": {
+    "take_uid": "d96a9ed2-d427-4d5e-894b-4d28a8350b69",
+    "root_dir": "takes/sfu_basketball_09_34",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 74.4,
+    "task_start_sec": 0.75458,
+    "task_end_sec": 74.13382,
+    "split": "train"
+  },
+  "uniandes_basketball_004_42": {
+    "take_uid": "3ac49447-8437-4e1a-b772-06f4c79afe96",
+    "root_dir": "takes/uniandes_basketball_004_42",
+    "chosen_cam": "cam01",
+    "used_fallback": false,
+    "duration_sec": 83.73333333333333,
+    "task_start_sec": 0.27761,
+    "task_end_sec": 83.41251,
+    "split": "train"
+  }
+}

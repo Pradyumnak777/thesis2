@@ -21,7 +21,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from motion_infiller import MotionInfiller
-from train_infiller import get_kinematic_peaks, create_masked_inputs
+from train_infiller import get_kinematic_peaks, create_masked_inputs_inference
 
 import debugpy
 # debugpy.listen(("127.0.0.1", 5678))
@@ -33,7 +33,7 @@ import debugpy
 VID_PATH = Path("dataset_prep/dataset_out/val/sfu_basketball012_4-----5-----uniandes_basketball_001_25-----13-----Arms/learner_exo.mp4")
 OUT_DIR = Path("demo/arch/inference_test_2") 
 TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_250.pth"
-INFILLER_CKPT = "demo/arch/infiller_ckpts_v3/motion_infiller_epoch_80.pth"
+INFILLER_CKPT = "demo/arch/infiller_ckpts_v3/motion_infiller_epoch_40.pth"
 # OUT_DIR = (OUT_DIR / VID_PATH.stem).resolve()
 
 def jumphot_heuristic(BASE):#base is the path to the smpl directory, NOT the smpl file itself!
@@ -142,8 +142,8 @@ if __name__ == "__main__":
             peak_indices = get_kinematic_peaks(data) # [B]   
         
         # create masked input tokens around kinematic peak t*
-        masked_tokens, mask_labels = create_masked_inputs(
-            clean_indices, peak_indices, mask_token_id=256, span_radius=8
+        masked_tokens, mask_labels = create_masked_inputs_inference(
+            clean_indices, peak_indices, mask_token_id=256, span_fraction=0.15
         )
         
         with torch.no_grad():

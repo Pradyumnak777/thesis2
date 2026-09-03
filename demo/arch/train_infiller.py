@@ -4,7 +4,7 @@ stage 2 training: motion infiller with kinematic peak masking
 
 import os
 # os.environ["CUDA_VISIBLE_DEVICES"] = "9"
-
+import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -43,24 +43,53 @@ def get_kinematic_peaks(motion_batch):
     return peak_indices
 
 
-def create_masked_inputs(clean_tokens, peak_indices, mask_token_id=256, span_radius=8):
+def create_masked_inputs(clean_tokens, peak_indices, mask_token_id=256, max_span_fraction=0.3):
     """
     clean_tokens: [B, T, 2]
     peak_indices: [B]
-    replaces tokens in window [t* - span, t* + span] with mask_token_id (256)
+    replaces tokens in window [t* - h, t* + h] with mask_token_id (256), where
+    h = ell // 2 and ell = max(2, int(max_span_fraction * T)) sampled uniformly
     """
     B, T, _ = clean_tokens.shape
     masked_tokens = clean_tokens.clone()
     mask_labels = torch.zeros((B, T), dtype=torch.bool, device=clean_tokens.device)
 
+    span_fraction = random.uniform(0, max_span_fraction)
+    ell = max(2, int(span_fraction * T))
+    h = ell // 2
+
     for b in range(B):
         t_star = peak_indices[b].item()
-        start = max(0, t_star - span_radius)
-        end = min(T, t_star + span_radius + 1)
-        
+        start = max(0, t_star - h)
+        end = min(T, t_star + h + 1)
+
         masked_tokens[b, start:end, :] = mask_token_id
         mask_labels[b, start:end] = True
-        
+
+    return masked_tokens, mask_labels
+
+def create_masked_inputs_inference(clean_tokens, peak_indices, mask_token_id=256, span_fraction=0.15):
+    """
+    clean_tokens: [B, T, 2]
+    peak_indices: [B]
+    replaces tokens in window [t* - h, t* + h] with mask_token_id (256), where
+    h = ell // 2 and ell = max(2, int(max_span_fraction * T)) sampled uniformly
+    """
+    B, T, _ = clean_tokens.shape
+    masked_tokens = clean_tokens.clone()
+    mask_labels = torch.zeros((B, T), dtype=torch.bool, device=clean_tokens.device)
+
+    ell = max(2, int(span_fraction * T))
+    h = ell // 2
+
+    for b in range(B):
+        t_star = peak_indices[b].item()
+        start = max(0, t_star - h)
+        end = min(T, t_star + h + 1)
+
+        masked_tokens[b, start:end, :] = mask_token_id
+        mask_labels[b, start:end] = True
+
     return masked_tokens, mask_labels
 
 
@@ -75,7 +104,7 @@ if __name__ == "__main__":
     ROOT_DIR = "demo/basketball_expert_smpl_v2"
     TARGET_LEN = 90
     BATCH_SIZE = 16
-    NUM_EPOCHS = 800
+    NUM_EPOCHS = 400
     LR = 1e-4
     TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_250.pth"
     SAVE_DIR = "demo/arch/infiller_ckpts_v3"
@@ -159,7 +188,7 @@ if __name__ == "__main__":
                 
             # create masked input tokens around kinematic peak t*
             masked_tokens, mask_labels = create_masked_inputs(
-                clean_indices, peak_indices, mask_token_id=256, span_radius=8
+                clean_indices, peak_indices, mask_token_id=256, max_span_fraction=0.3
             )
 
             optimizer.zero_grad()
@@ -213,7 +242,7 @@ if __name__ == "__main__":
             print(f"====epoch: {epoch}=====")
             print(f"MLM Loss: {avg_loss:.4f} | Codebook 1 Acc: {avg_acc1:.2f}% | Codebook 2 Acc: {avg_acc2:.2f}%")
             
-            if epoch % 80 == 0 or epoch == NUM_EPOCHS:
+            if epoch % 40 == 0 or epoch == NUM_EPOCHS:
                 
                 ckpt_path = os.path.join(SAVE_DIR, f"motion_infiller_epoch_{epoch}.pth")
                 torch.save({

@@ -7,9 +7,9 @@ from pose_tokenizer import poseTokenizer
 from data_utils import smplPoseLoader
 
 def test_autoencoder_reconstruction(
-    checkpoint_path="demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_100.pth",
+    checkpoint_path="demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_250.pth",
     # input_motion_path="demo/basketball_expert_smpl_v2/sfu_basketball_03_18__rep4__t23.01/wham_output_selected.pkl",
-    input_motion_path="demo/arch/inference_test/learner_exo/wham_output_selected.pkl",
+    input_motion_path="demo/arch/inference_test_2/learner_exo/wham_output_selected.pkl",
     output_recon_path="demo/arch/recon_test_motion.pkl",
     target_len=90,
     device="cuda" if torch.cuda.is_available() else "cpu"
@@ -82,8 +82,8 @@ def test_autoencoder_reconstruction(
     # 0:3 -> trans_world
     # 3:6 -> root orientation (joint 0)
     # 6:69 -> body pose (joints 1..21 = 63 dims)
-    recon_trans = recon_np[:, :3]
-    recon_root = recon_np[:, 3:6]
+    recon_trans = orig_poses[:, :3]
+    recon_root = orig_poses[:, 3:6]
     recon_body = recon_np[:, 6:69]
 
     # Pad the missing 2 joints (6 dimensions for hands/wrists) to reach full 24 SMPL joints (72 dims)
