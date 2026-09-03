@@ -3,7 +3,7 @@ example of path to a file:
 thesis_new/demo/basketball_expert_smpl/Mid-range jump shot/sfu_basketball_03_12__7.467-9.467__cam01/wham_output_selected.pkl
 '''
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "9"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "9"
 
 import glob
 import joblib

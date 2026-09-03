@@ -3,7 +3,7 @@ stage 2 training: motion infiller with kinematic peak masking
 '''
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "9"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "9"
 
 import torch
 import torch.nn as nn
@@ -12,7 +12,20 @@ from torch.utils.data import DataLoader
 from data_utils import smplPoseLoader
 from pose_tokenizer import poseTokenizer
 from motion_infiller import MotionInfiller
+from itertools import cycle
+import torch.distributed as dist
+from torch.utils.data.distributed import DistributedSampler
+from torch.nn.parallel import DistributedDataParallel as DDP
 
+def setup_DDP():
+    #define local rank?
+    dist.init_process_group("nccl")
+    local_rank = int(os.environ["LOCAL_RANK"])
+    torch.cuda.set_device(local_rank)
+    return local_rank
+
+def cleanup_DDP():
+    dist.destroy_process_group()
 
 def get_kinematic_peaks(motion_batch):
     """
@@ -52,8 +65,11 @@ def create_masked_inputs(clean_tokens, peak_indices, mask_token_id=256, span_rad
 
 
 if __name__ == "__main__":
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    print(f"Using device: {device}")
+    local_rank = setup_DDP() #this will be the gpu number
+    
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if local_rank == 0:
+        print(f"Using device: {device}")
 
     # hyperparams
     ROOT_DIR = "demo/basketball_expert_smpl_v2"
@@ -61,50 +77,80 @@ if __name__ == "__main__":
     BATCH_SIZE = 16
     NUM_EPOCHS = 800
     LR = 1e-4
-    TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v2/pose_tokenizer_epoch_500.pth"
-    SAVE_DIR = "demo/arch/infiller_ckpts_v2"
+    TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_250.pth"
+    SAVE_DIR = "demo/arch/infiller_ckpts_v3"
     os.makedirs(SAVE_DIR, exist_ok=True)
 
+    
+    
     # 1. dataloader
     dataset = smplPoseLoader(root_dir=ROOT_DIR, target_len=TARGET_LEN, split='train')
+    
+    #NOTE: defining a distirbuted sampler
+    
+    train_sampler = DistributedSampler(
+        dataset,
+        num_replicas=dist.get_world_size(),
+        rank = dist.get_rank(),
+        shuffle=True
+    )
+    
     train_loader = DataLoader(
         dataset,
         batch_size=BATCH_SIZE,
-        shuffle=True,
-        num_workers=2,
-        pin_memory=True,
-        drop_last=True
+        shuffle=False,
+        sampler=train_sampler
     )
+    
+    # train_loader = DataLoader(
+    #     dataset,
+    #     batch_size=BATCH_SIZE,
+    #     shuffle=True,
+    #     num_workers=2,
+    #     pin_memory=True,
+    #     drop_last=True
+    # )
 
     # 2. load and freeze stage 1 tokenizer
-    tokenizer = poseTokenizer(hidden_dim=384, out_dim=256, num_joints=21, num_layers=6).to(device)
+    tokenizer = poseTokenizer(hidden_dim=384, out_dim=256, num_joints=21, num_layers=6).to(local_rank)
+    # tokenizer = DDP(tokenizer, device_ids=[local_rank], output_device=local_rank) # no need as its frozen
+    
     if os.path.exists(TOKENIZER_CKPT):
-        ckpt = torch.load(TOKENIZER_CKPT, map_location=device)
+        ckpt = torch.load(TOKENIZER_CKPT, map_location=f"cuda:{local_rank}")
         tokenizer.load_state_dict(ckpt['model_state_dict'])
-        print(f"Loaded frozen tokenizer from {TOKENIZER_CKPT}")
+        if local_rank == 0:
+            print(f"Loaded frozen tokenizer from {TOKENIZER_CKPT}")
     else:
-        print(f"Warning: {TOKENIZER_CKPT} not found. Running with uninitialized tokenizer.")
+        if local_rank == 0:
+            print(f"Warning: {TOKENIZER_CKPT} not found. Running with uninitialized tokenizer.")
     
     tokenizer.eval()
     for param in tokenizer.parameters():
         param.requires_grad = False
 
     # 3. initialize stage 2 infiller model & optimizer
-    infiller = MotionInfiller(vocab_size=256, emb_dim=128, hidden_dim=256, num_layers=12, nhead=8).to(device)
+    infiller = MotionInfiller(vocab_size=256, emb_dim=128, hidden_dim=256, num_layers=12, nhead=8).to(local_rank)
+    infiller = DDP(infiller, device_ids=[local_rank], output_device=local_rank)
+    
     optimizer = torch.optim.AdamW(infiller.parameters(), lr=LR, weight_decay=1e-2)
     criterion = nn.CrossEntropyLoss()
 
     print("Starting Stage 2: Motion Infiller Training...")
     infiller.train()
 
+    count = 0
     for epoch in range(1, NUM_EPOCHS + 1):
+        train_sampler.set_epoch(epoch)
+        train_iter = cycle(train_loader)
+        
         running_loss = 0.0
         running_acc1 = 0.0
         running_acc2 = 0.0
         total_masked_tokens = 0
-
-        for batch_idx, (batch_x, _) in enumerate(train_loader):
-            batch_x = batch_x.to(device)  # [B, T, 69]
+        
+        while count < 5000:
+            batch_x, _ = next(train_iter)
+            batch_x = batch_x.to(local_rank)  # [B, T, 69]
 
             # extract discrete tokens using frozen tokenizer
             with torch.no_grad():
@@ -147,21 +193,36 @@ if __name__ == "__main__":
                 running_acc2 += acc2
                 total_masked_tokens += num_m
 
-        avg_loss = running_loss / len(train_loader)
-        avg_acc1 = (running_acc1 / total_masked_tokens) * 100
-        avg_acc2 = (running_acc2 / total_masked_tokens) * 100
+            count+=1
 
-        print(f"Epoch [{epoch:03d}/{NUM_EPOCHS:03d}] | MLM Loss: {avg_loss:.4f} | Codebook 1 Acc: {avg_acc1:.2f}% | Codebook 2 Acc: {avg_acc2:.2f}%")
+            if local_rank == 0 and count % 100 == 0: #printing only from GPU 1
+                avg_loss_mini = running_loss / count
+                avg_acc1_mini = (running_acc1 / total_masked_tokens) * 100
+                avg_acc2_mini = (running_acc2 / total_masked_tokens) * 100
+                print(f"epoch: {epoch}, count: {count}")
+                print(f"MLM Loss: {avg_loss_mini:.4f} | Codebook 1 Acc: {avg_acc1_mini:.2f}% | Codebook 2 Acc: {avg_acc2_mini:.2f}%")
 
         # save periodic checkpoints
-        if epoch % 80 == 0 or epoch == NUM_EPOCHS:
-            ckpt_path = os.path.join(SAVE_DIR, f"motion_infiller_epoch_{epoch}.pth")
-            torch.save({
-                'epoch': epoch,
-                'model_state_dict': infiller.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'loss': avg_loss,
-            }, ckpt_path)
-            print(f"--> Saved infiller checkpoint to {ckpt_path}")
+        count = 0
+        
+        if dist.get_rank() == 0:
+            #logging
+            avg_loss = running_loss / 5000
+            avg_acc1 = (running_acc1 / total_masked_tokens) * 100
+            avg_acc2 = (running_acc2 / total_masked_tokens) * 100
+            print(f"====epoch: {epoch}=====")
+            print(f"MLM Loss: {avg_loss:.4f} | Codebook 1 Acc: {avg_acc1:.2f}% | Codebook 2 Acc: {avg_acc2:.2f}%")
+            
+            if epoch % 80 == 0 or epoch == NUM_EPOCHS:
+                
+                ckpt_path = os.path.join(SAVE_DIR, f"motion_infiller_epoch_{epoch}.pth")
+                torch.save({
+                    'epoch': epoch,
+                    'model_state_dict': infiller.module.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'loss': avg_loss,
+                }, ckpt_path)
+                print(f"--> Saved infiller checkpoint to {ckpt_path}")
 
+    cleanup_DDP()
     print("Stage 2 Training Complete. Both models ready for inference and editing!")

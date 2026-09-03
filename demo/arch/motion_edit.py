@@ -23,10 +23,17 @@ import torch.nn.functional as F
 from motion_infiller import MotionInfiller
 from train_infiller import get_kinematic_peaks, create_masked_inputs
 
-VID_PATH = Path("dataset_prep/dataset_out/val/unc_basketball_02-24-23_02_12-----2-----unc_basketball_02-24-23_01_19-----20-----Jump/learner_exo.mp4")
+import debugpy
+# debugpy.listen(("127.0.0.1", 5678))
+# print("Waiting for debugger attach on port 5678...")
+# debugpy.wait_for_client()
+# print("Debugger attached! Running code...")
+
+
+VID_PATH = Path("dataset_prep/dataset_out/val/sfu_basketball012_4-----5-----uniandes_basketball_001_25-----13-----Arms/learner_exo.mp4")
 OUT_DIR = Path("demo/arch/inference_test_2") 
-TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v2/pose_tokenizer_epoch_500.pth"
-INFILLER_CKPT = "demo/arch/infiller_ckpts_v2/motion_infiller_epoch_800.pth"
+TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_250.pth"
+INFILLER_CKPT = "demo/arch/infiller_ckpts_v3/motion_infiller_epoch_80.pth"
 # OUT_DIR = (OUT_DIR / VID_PATH.stem).resolve()
 
 def jumphot_heuristic(BASE):#base is the path to the smpl directory, NOT the smpl file itself!
@@ -204,10 +211,19 @@ if __name__ == "__main__":
 
         # 2. Extract the decoded edit slice corresponding to valid frames
         decoded_slice = edited_body_poses[:valid_len]
+        
+        '''
+        below replaces everything/full 90 frames with decoder
+        '''
+        full_body_edited[start_frame:end_frame] = decoded_slice
+
 
         # 3. Splice ONLY inside the mask (with 2-frame linear blending at boundaries to eliminate snapping)
-        blend_weights = mask_np.astype(np.float32)[:, None]
-        # # Optional: smooth transition at mask edges
+        # blend_weights = mask_np.astype(np.float32)[:, None]
+        
+        '''
+        below replaces only the masked tokens with decoder
+        '''        
         # for idx in np.where(mask_np)[0]:
         #     full_body_edited[start_frame + idx] = decoded_slice[idx]
 
@@ -215,6 +231,16 @@ if __name__ == "__main__":
         edited_pose_world = full_pose.copy()
         edited_pose_world[:, 3:66] = full_body_edited
 
+        cropped_dict = {
+            'trans_world': full_trans[start_frame:end_frame],
+            'pose_world': full_pose[start_frame:end_frame],
+            'betas': selected_person.get('betas', None),
+        }
+        cropped_file = ACTOR_DIR / "input_90frame_smpl.pkl"
+        joblib.dump(cropped_dict, cropped_file)
+        print(f"Saved cropped {valid_len}-frame input window to {cropped_file}")
+
+        
         output_dict = {
             'trans_world': full_trans,
             'pose_world': edited_pose_world,

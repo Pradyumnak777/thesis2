@@ -95,6 +95,7 @@ if __name__ == "__main__":
     NUM_EPOCHS = 500
     LR = 5e-5
     SAVE_DIR = "demo/arch/tokenizer_ckpts_v3"
+    RESUME_CKPT = os.path.join(SAVE_DIR, "pose_tokenizer_epoch_100.pth")
     # VERTEX_LOSS_FRAC = 0.15  # PoseGPT appendix: 10-20% of frames is sufficient
     os.makedirs(SAVE_DIR, exist_ok=True)
 
@@ -151,6 +152,19 @@ if __name__ == "__main__":
         num_layers=6
     ).to(local_rank) #sends to some GPU
     
+    '''
+    code for resuming from checkpoint
+    '''
+    start_epoch = 1
+    if RESUME_CKPT and os.path.exists(RESUME_CKPT):
+        ckpt = torch.load(RESUME_CKPT, map_location=f"cuda:{local_rank}")
+        model.load_state_dict(ckpt['model_state_dict'])
+        start_epoch = ckpt['epoch'] + 1
+        if local_rank == 0:
+            print(f"Resumed tokenizer from {RESUME_CKPT} (epoch {ckpt['epoch']})")
+
+    
+    
     model = DDP(model, device_ids=[local_rank], output_device=local_rank)
     
 
@@ -173,7 +187,7 @@ if __name__ == "__main__":
     '''
     
     count = 0
-    for epoch in range(1, NUM_EPOCHS + 1):
+    for epoch in range(start_epoch, NUM_EPOCHS + 1):
         train_sampler.set_epoch(epoch) #NOTE: seems to be imp!!
         train_iter = cycle(train_loader)
         

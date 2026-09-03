@@ -23,7 +23,7 @@ OPERATIVE_PHRASES = [
     "shot is released",
 ]
 SIM_THRESHOLD = 0.5
-MIN_SEP_FRAMES = T  # don't let two accepted windows from the same take overlap
+# MIN_SEP_FRAMES = T  # don't let two accepted windows from the same take overlap
 
 
 def get_video_path(take_meta, cam_id):
@@ -72,7 +72,7 @@ def flatten_descriptions(narr_entries):
 def find_operative_moments(descriptions, encoder, phrases=OPERATIVE_PHRASES, threshold=SIM_THRESHOLD):
     # returns a list of (timestamp_sec, score, text, best_exo_cam_id) for every description
     # that clears the threshold, NOT just the single best one -- a take has multiple reps,
-    # so we want a candidate per rep, deduped below
+    # and multiple narration passes may each independently describe the same rep
     usable = [d for d in descriptions if not d.get("unsure", False)]
     if not usable:
         return []
@@ -94,16 +94,16 @@ def find_operative_moments(descriptions, encoder, phrases=OPERATIVE_PHRASES, thr
     return candidates
 
 
-def dedupe_candidates(candidates, fps=FPS, min_sep_frames=MIN_SEP_FRAMES):
-    # greedy: keep highest-scoring candidates first, drop anything too close in time
-    # to something already accepted
-    candidates = sorted(candidates, key=lambda c: c[1], reverse=True)
-    accepted = []
-    for t_sec, score, text, cam_id in candidates:
-        t_frame = round(t_sec * fps)
-        if all(abs(t_frame - round(a[0] * fps)) >= min_sep_frames for a in accepted):
-            accepted.append((t_sec, score, text, cam_id))
-    return sorted(accepted, key=lambda c: c[0])  # chronological order for saving
+# def dedupe_candidates(candidates, fps=FPS, min_sep_frames=MIN_SEP_FRAMES):
+#     # greedy: keep highest-scoring candidates first, drop anything too close in time
+#     # to something already accepted
+#     candidates = sorted(candidates, key=lambda c: c[1], reverse=True)
+#     accepted = []
+#     for t_sec, score, text, cam_id in candidates:
+#         t_frame = round(t_sec * fps)
+#         if all(abs(t_frame - round(a[0] * fps)) >= min_sep_frames for a in accepted):
+#             accepted.append((t_sec, score, text, cam_id))
+#     return sorted(accepted, key=lambda c: c[0])  # chronological order for saving
 
 
 def main():
@@ -117,7 +117,8 @@ def main():
         narr_entries = load_narrations(meta["take_uid"])
         descriptions = flatten_descriptions(narr_entries)
         candidates = find_operative_moments(descriptions, encoder)
-        accepted = dedupe_candidates(candidates)
+        # accepted = dedupe_candidates(candidates) #old method
+        accepted = sorted(candidates, key=lambda c: c[0]) #chronological error
 
         if not accepted:
             print(f"{take_name}: no operative moments found above threshold")
