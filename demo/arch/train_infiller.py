@@ -92,6 +92,14 @@ def create_masked_inputs_inference(clean_tokens, peak_indices, mask_token_id=256
 
     return masked_tokens, mask_labels
 
+def infinite_batches(loader, sampler=None):
+    epoch = 0
+    while True:
+        if sampler is not None:
+            sampler.set_epoch(epoch)   #reshuffle differently each pass
+        for batch in loader:
+            yield batch
+        epoch += 1
 
 if __name__ == "__main__":
     local_rank = setup_DDP() #this will be the gpu number
@@ -104,9 +112,9 @@ if __name__ == "__main__":
     ROOT_DIR = "demo/basketball_expert_smpl_v2"
     TARGET_LEN = 90
     BATCH_SIZE = 16
-    NUM_EPOCHS = 400
+    NUM_EPOCHS = 10
     LR = 1e-4
-    TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_250.pth"
+    TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_20.pth"
     SAVE_DIR = "demo/arch/infiller_ckpts_v3"
     os.makedirs(SAVE_DIR, exist_ok=True)
 
@@ -168,16 +176,18 @@ if __name__ == "__main__":
     infiller.train()
 
     count = 0
+    steps = 1000
+    train_iter = infinite_batches(train_loader, train_sampler)
     for epoch in range(1, NUM_EPOCHS + 1):
-        train_sampler.set_epoch(epoch)
-        train_iter = cycle(train_loader)
+        # train_sampler.set_epoch(epoch)
+        # train_iter = cycle(train_loader)
         
         running_loss = 0.0
         running_acc1 = 0.0
         running_acc2 = 0.0
         total_masked_tokens = 0
         
-        while count < 5000:
+        while count < steps:
             batch_x, _ = next(train_iter)
             batch_x = batch_x.to(local_rank)  # [B, T, 69]
 
@@ -236,13 +246,13 @@ if __name__ == "__main__":
         
         if dist.get_rank() == 0:
             #logging
-            avg_loss = running_loss / 5000
+            avg_loss = running_loss / steps
             avg_acc1 = (running_acc1 / total_masked_tokens) * 100
             avg_acc2 = (running_acc2 / total_masked_tokens) * 100
             print(f"====epoch: {epoch}=====")
             print(f"MLM Loss: {avg_loss:.4f} | Codebook 1 Acc: {avg_acc1:.2f}% | Codebook 2 Acc: {avg_acc2:.2f}%")
             
-            if epoch % 40 == 0 or epoch == NUM_EPOCHS:
+            if epoch % 2 == 0 or epoch == NUM_EPOCHS:
                 
                 ckpt_path = os.path.join(SAVE_DIR, f"motion_infiller_epoch_{epoch}.pth")
                 torch.save({

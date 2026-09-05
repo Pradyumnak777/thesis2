@@ -79,6 +79,16 @@ def get_vertices(body_model, trans, root_orient, body_pose_63, betas):
     return out.vertices.reshape(B, N, -1, 3)
 
 
+def infinite_batches(loader, sampler=None):
+    epoch = 0
+    while True:
+        if sampler is not None:
+            sampler.set_epoch(epoch)   #reshuffle differently each pass
+        for batch in loader:
+            yield batch
+        epoch += 1
+
+
 if __name__ == "__main__":
     #for parallel
     local_rank = setup_ddp()
@@ -92,7 +102,7 @@ if __name__ == "__main__":
     ROOT_DIR = "demo/basketball_expert_smpl_v2"
     TARGET_LEN = 90  # Tframes for jumpshot
     BATCH_SIZE = 64
-    NUM_EPOCHS = 500
+    NUM_EPOCHS = 100
     LR = 5e-5
     SAVE_DIR = "demo/arch/tokenizer_ckpts_v3"
     RESUME_CKPT = os.path.join(SAVE_DIR, "pose_tokenizer_epoch_100.pth")
@@ -187,14 +197,16 @@ if __name__ == "__main__":
     '''
     
     count = 0
+    steps = 1000
+    train_iter = infinite_batches(train_loader, train_sampler)
     for epoch in range(start_epoch, NUM_EPOCHS + 1):
-        train_sampler.set_epoch(epoch) #NOTE: seems to be imp!!
-        train_iter = cycle(train_loader)
+        # train_sampler.set_epoch(epoch) #NOTE: seems to be imp!!
+        
         
         running_recon_loss = 0.0
         running_vq_loss = 0.0
         running_total_loss = 0.0
-        while count < 5000:
+        while count < steps:
             
             batch_x, _ = next(train_iter) #normally "betas" is returned but im not using vertex loss this time..
             batch_x = batch_x.to(local_rank)
@@ -222,7 +234,7 @@ if __name__ == "__main__":
             count += 1
             
             #logging after steps
-            if local_rank == 0 and count % 100 == 0: #printing only from GPU 1
+            if local_rank == 0 and count % 50 == 0: #printing only from GPU 1
                 avg_recon_mini = running_recon_loss / count 
                 # avg_vertex = running_vertex_loss / len(train_loader)
                 avg_vq_mini = running_vq_loss / count
@@ -232,10 +244,10 @@ if __name__ == "__main__":
 
         # Epoch logging
         count = 0
-        avg_recon = running_recon_loss / 5000 #iters per epoch
+        avg_recon = running_recon_loss / steps #iters per epoch
         # avg_vertex = running_vertex_loss / len(train_loader)
-        avg_vq = running_vq_loss / 5000
-        avg_total = running_total_loss / 5000 
+        avg_vq = running_vq_loss / steps
+        avg_total = running_total_loss / steps 
 
         # print(f"Epoch [{epoch:03d}/{NUM_EPOCHS:03d}] | Total Loss: {avg_total:.6f} | Recon Loss: {avg_recon:.6f} | Vertex Loss: {avg_vertex:.6f} | VQ Loss: {avg_vq:.6f}")
         
@@ -245,7 +257,7 @@ if __name__ == "__main__":
             print(f"Epoch [{epoch:03d}/{NUM_EPOCHS:03d}] | Total Loss: {avg_total:.6f} | Recon Loss: {avg_recon:.6f} | VQ Loss: {avg_vq:.6f}")
             # Use .module to strip the DDP wrapper before saving
 
-            if epoch % 50 == 0 or epoch == NUM_EPOCHS:
+            if epoch % 10 == 0 or epoch == NUM_EPOCHS:
                 if local_rank == 0:
                     ckpt_path = os.path.join(SAVE_DIR, f"pose_tokenizer_epoch_{epoch}.pth")
                     torch.save({

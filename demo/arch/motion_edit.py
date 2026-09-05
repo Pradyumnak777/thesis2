@@ -30,10 +30,10 @@ import debugpy
 # print("Debugger attached! Running code...")
 
 
-VID_PATH = Path("dataset_prep/dataset_out/val/sfu_basketball012_4-----5-----uniandes_basketball_001_25-----13-----Arms/learner_exo.mp4")
+VID_PATH = Path("dataset_prep/dataset_out/val/unc_basketball_02-24-23_01_34-----23-----unc_basketball_03-30-23_02_7-----30-----Arms/learner_exo.mp4")
 OUT_DIR = Path("demo/arch/inference_test_2") 
-TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_250.pth"
-INFILLER_CKPT = "demo/arch/infiller_ckpts_v3/motion_infiller_epoch_40.pth"
+TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_20.pth"
+INFILLER_CKPT = "demo/arch/infiller_ckpts_v3/motion_infiller_epoch_4.pth"
 # OUT_DIR = (OUT_DIR / VID_PATH.stem).resolve()
 
 def jumphot_heuristic(BASE):#base is the path to the smpl directory, NOT the smpl file itself!
