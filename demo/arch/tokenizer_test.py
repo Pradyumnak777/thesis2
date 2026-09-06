@@ -70,10 +70,10 @@ def test_autoencoder_reconstruction(
     print(f"Reconstruction MSE Error : {mse_err:.4f}")
     print(f"Token Sequence Shape     : {tokens.shape if isinstance(tokens, torch.Tensor) else len(tokens)}")
 
-    if isinstance(tokens, torch.Tensor):
-        flat_tokens = tokens.flatten().cpu().numpy()
-        unique_tokens = np.unique(flat_tokens)
-        print(f"Unique Codebook Usage    : {len(unique_tokens)} active tokens out of {tokens.numel()} sequence tokens")
+    # if isinstance(tokens, torch.Tensor):
+    #     flat_tokens = tokens.flatten().cpu().numpy()
+    #     unique_tokens = np.unique(flat_tokens)
+    #     print(f"Unique Codebook Usage    : {len(unique_tokens)} active tokens out of {tokens.numel()} sequence tokens")
 
     # 5. Unpack and Save Back to WHAM Format for smpl_viz.py
     recon_np = recon_poses.numpy()  # (90, 69)

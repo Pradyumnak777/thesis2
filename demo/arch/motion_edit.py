@@ -30,7 +30,7 @@ import debugpy
 # print("Debugger attached! Running code...")
 
 
-VID_PATH = Path("dataset_prep/dataset_out/val/unc_basketball_02-24-23_01_34-----23-----unc_basketball_03-30-23_02_7-----30-----Arms/learner_exo.mp4")
+VID_PATH = Path("dataset_prep/dataset_out/train/sfu_basketball014_6-----4-----unc_basketball_03-16-23_01_37-----6-----Legs/learner_exo.mp4")
 OUT_DIR = Path("demo/arch/inference_test_2") 
 TOKENIZER_CKPT = "demo/arch/tokenizer_ckpts_v3/pose_tokenizer_epoch_20.pth"
 INFILLER_CKPT = "demo/arch/infiller_ckpts_v3/motion_infiller_epoch_4.pth"
