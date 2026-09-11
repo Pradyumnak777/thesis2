@@ -1,0 +1,8 @@
+1. activate difftrack (pip install --upgrade --no-cache-dir PyOpenGL PyOpenGL-accelerate SHOULD be present)
+2. export MUJOCO_GL=egl
+3.cd demo/GMR
+3. python scripts/smplx_to_robot_custom.py \
+    --smplx_file /scratch/pbk5339/thesis_new/demo/gmr_input_motion_expert.pkl \
+    --robot unitree_g1 \
+    --save_path g1_retargeted_expert.pkl \
+    --record_video --video_path videos/g1_retargeted_expert.mp4

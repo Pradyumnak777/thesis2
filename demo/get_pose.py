@@ -32,7 +32,7 @@ import torch
 # debugpy.wait_for_client()
 # print("Debugger attached! Running code...")
 
-BASE = "smpl_info/expert_exo"
+BASE = "smpl_pose"
 
 model = smplx.create(
     model_path="GMR/assets/body_models",
@@ -43,19 +43,19 @@ model = smplx.create(
 
 if __name__ == "__main__":
     
-    wham_output      = joblib.load(f"{BASE}/wham_output.pkl")
-    slam_results     = joblib.load(f"{BASE}/slam_results.pth")
-    tracking_results = joblib.load(f"{BASE}/tracking_results.pth")
+    wham_output      = joblib.load(f"{BASE}/edited_motion_smpl.pkl")
+    # slam_results     = joblib.load(f"{BASE}/slam_results.pth")
+    # tracking_results = joblib.load(f"{BASE}/tracking_results.pth")
 
     
     #inspecting the files
     print("\nPKL Type: ", type(wham_output))
-    print("\nPTH(slam) Type:", type(slam_results))
-    print("\nPTH(tracking) Type:", type(tracking_results))
+    # print("\nPTH(slam) Type:", type(slam_results))
+    # print("\nPTH(tracking) Type:", type(tracking_results))
     
     
     #get the first person pose information (over all frames)
-    pose_info = wham_output[0]
+    pose_info = wham_output
     # joblib.dump(pose_info, "pose_info.joblib")
     
     pose_world = pose_info["pose_world"]
@@ -165,7 +165,7 @@ if __name__ == "__main__":
         ),  # (10,)
     }
 
-    with open("gmr_input_motion_new.pkl", "wb") as f:
+    with open("gmr_input_motion_expert.pkl", "wb") as f:
         pickle.dump(gmr_smpl_data, f)
 
     print("Saved gmr_input_motion.pkl successfully!")
