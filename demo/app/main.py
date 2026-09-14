@@ -39,7 +39,7 @@ def parse_args():
 def build_ui(pipeline):
     import gradio as gr
 
-    def run(input_file, span_fraction, splice, window_only, fps, size, do_render):
+    def run(input_file, span_fraction, splice, window_only, fps, size, do_render, show_tok_recon):
         """generator so the log streams while WHAM/rendering grinds away"""
         lines = []
 
@@ -47,13 +47,15 @@ def build_ui(pipeline):
             print(msg, flush=True)
             lines.append(str(msg))
 
+        tok_col_update = gr.update(visible=bool(show_tok_recon))
+
         if not input_file:
-            yield "upload a .pkl or .mp4 first", None, None, None, None
+            yield "upload a .pkl or .mp4 first", None, None, None, None, None, tok_col_update
             return
 
         run_dir = RUNS_DIR / datetime.now().strftime("%Y%m%d_%H%M%S")
         log(f"run dir: {run_dir}")
-        yield "\n".join(lines), None, None, None, None
+        yield "\n".join(lines), None, None, None, None, None, tok_col_update
 
         try:
             res = pipeline.run_pipeline(
@@ -65,20 +67,23 @@ def build_ui(pipeline):
                 size=int(size),
                 window_only=bool(window_only),
                 render=bool(do_render),
+                show_tok_recon=bool(show_tok_recon),
                 log=log,
             )
         except Exception:
             log("FAILED:\n" + traceback.format_exc())
-            yield "\n".join(lines), None, None, None, None
+            yield "\n".join(lines), None, None, None, None, None, tok_col_update
             return
 
         log("done")
         yield (
             "\n".join(lines),
             str(res["original_mp4"]) if res["original_mp4"] else None,
+            str(res["tokenizer_recon_mp4"]) if res["tokenizer_recon_mp4"] else None,
             str(res["edited_mp4"]) if res["edited_mp4"] else None,
             str(res["edited_pkl"]),
             res["info"],
+            tok_col_update,
         )
 
     with gr.Blocks(title="motion edit demo") as demo:
@@ -86,7 +91,10 @@ def build_ui(pipeline):
             "## tokenizer + infiller motion edit\n"
             "upload a WHAM `.pkl` (raw `wham_output.pkl` or a `wham_output_selected.pkl`) "
             "or an `.mp4` (WHAM runs first, slow). orange frames in the edited video are the "
-            "masked frames the infiller rewrote."
+            "masked frames the infiller rewrote. optionally also render **tokenizer recon** -- "
+            "the plain encode→quantize→decode round trip with no masking or infiller involved "
+            "at all -- to compare against original/edited and see how much of the edit is "
+            "coming from the infiller vs. just tokenizer reconstruction bias."
         )
 
         with gr.Row():
@@ -105,23 +113,34 @@ def build_ui(pipeline):
                 )
                 window_only = gr.Checkbox(True, label="render only the 90-frame window (faster)")
                 do_render = gr.Checkbox(True, label="render videos (uncheck for pkl only)")
+                show_tok_recon = gr.Checkbox(
+                    False,
+                    label="also render tokenizer recon (3rd video, no infiller)",
+                    info="extra SMPL + render pass -- off by default",
+                )
                 with gr.Row():
                     fps = gr.Number(30, label="fps", precision=0)
                     size = gr.Number(640, label="render size (px)", precision=0)
                 run_btn = gr.Button("run pipeline", variant="primary")
 
-            with gr.Column(scale=2):
+            with gr.Column(scale=3):
                 with gr.Row():
                     orig_vid = gr.Video(label="original", autoplay=True, loop=True)
+                    with gr.Column(visible=False) as tok_col:
+                        tok_vid = gr.Video(label="tokenizer recon (no infiller)", autoplay=True, loop=True)
                     edit_vid = gr.Video(label="edited", autoplay=True, loop=True)
                 info = gr.JSON(label="run info")
                 edited_pkl = gr.File(label="edited_motion_smpl.pkl")
                 log_box = gr.Textbox(label="log", lines=14, max_lines=30)
 
+        # keep the 3rd panel's visibility in sync with the checkbox even before
+        # a run happens, so toggling it doesn't need a "run pipeline" click first
+        show_tok_recon.change(lambda v: gr.update(visible=v), inputs=[show_tok_recon], outputs=[tok_col])
+
         run_btn.click(
             run,
-            inputs=[input_file, span, splice, window_only, fps, size, do_render],
-            outputs=[log_box, orig_vid, edit_vid, edited_pkl, info],
+            inputs=[input_file, span, splice, window_only, fps, size, do_render, show_tok_recon],
+            outputs=[log_box, orig_vid, tok_vid, edit_vid, edited_pkl, info, tok_col],
         )
 
     return demo

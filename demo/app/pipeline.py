@@ -223,7 +223,10 @@ def edit_motion(person, span_fraction=0.15, splice="window", device=None, log=pr
     splice: "window" replaces the whole 90-frame window with the decoder output,
             "mask"   replaces only the masked frames (leaves the rest untouched)
 
-    returns (edited_person_dict, info_dict)
+    returns (edited_person_dict, tokenizer_recon_person_dict, info_dict). The
+    tokenizer-recon dict is the plain encode->quantize->decode round trip with
+    no masking/infiller involved at all -- useful for isolating how much of the
+    "edit" is actually just tokenizer reconstruction bias vs. the infiller.
     """
     device = device or get_device()
     tokenizer, infiller = get_models(device, log=log)
@@ -231,7 +234,11 @@ def edit_motion(person, span_fraction=0.15, splice="window", device=None, log=pr
     data, start_frame, valid_len = motion_window(person)
     data = data.to(device)
 
-    _, _, clean_indices = tokenizer(data)                 # [1, T, 2]
+    # x_recon here IS the pure tokenizer round trip (encode -> quantize -> decode,
+    # no masking) -- the infiller never touches it. Stage 1 training already
+    # optimizes exactly this reconstruction (see train_tokenizer.py), we just
+    # never kept it around before now.
+    x_recon, _, clean_indices = tokenizer(data)           # [1, T, 69], _, [1, T, 2]
     peak_indices = get_kinematic_peaks(data)              # [1]
 
     masked_tokens, mask_labels = create_masked_inputs_inference(
@@ -279,6 +286,21 @@ def edit_motion(person, span_fraction=0.15, splice="window", device=None, log=pr
         "edit_mask": mask_np,
     }
 
+    # pure tokenizer round trip: no mask, no infiller -- the whole window is
+    # just decode(quantize(encode(novice_window))). Splice mode doesn't apply
+    # here since there's no unmasked region to preserve; it's the reconstruction
+    # for the full window either way.
+    tok_recon_body = x_recon.squeeze(0).cpu().numpy()[:, 6:69]   # [T, 63]
+    tok_recon_pose = full_pose.copy()
+    tok_recon_pose[start_frame:end_frame, 3:66] = tok_recon_body[:valid_len]
+    tokenizer_recon_person = {
+        "trans_world": person["trans_world"],
+        "pose_world": tok_recon_pose,
+        "betas": person.get("betas", None),
+        "edit_start_frame": start_frame,
+        "edit_end_frame": end_frame,
+    }
+
     info = {
         "raw_frames": int(full_pose.shape[0]),
         "window": (int(start_frame), int(end_frame)),
@@ -290,7 +312,7 @@ def edit_motion(person, span_fraction=0.15, splice="window", device=None, log=pr
     }
     log(f"peak @ frame {info['peak_frame_in_window']} of the window, "
         f"{n_masked} frames masked, infiller changed {n_changed}/{n_masked * 2} token values")
-    return edited_person, info
+    return edited_person, tokenizer_recon_person, info
 
 
 '''
@@ -377,12 +399,18 @@ def _render_frames(all_verts, faces, cam_pose, w, h, colors=None):
     return frames
 
 
-def render_pair(original, edited, out_dir, fps=30, size=640, window_only=True, log=print):
+def render_triple(original, tok_recon, edited, out_dir, fps=30, size=640, window_only=True,
+                  include_tok_recon=True, log=print):
     """
-    renders original + edited side by side friendly: same camera for both, so the
-    two videos are directly comparable. edited frames inside the mask are tinted.
+    renders original + edited, and optionally the pure-tokenizer-reconstruction
+    (no infiller involved) as a 3rd video -- set include_tok_recon=False to skip
+    it (it's the extra rendering cost of the three, since it needs its own SMPL
+    forward + render pass same as the other two). all rendered videos share one
+    camera so they're directly comparable. edited frames inside the mask are
+    tinted; tok_recon has no mask (it's a plain autoencoder round trip) so it
+    renders untinted.
 
-    returns (original_mp4, edited_mp4)
+    returns (original_mp4, tokenizer_recon_mp4_or_None, edited_mp4)
     """
     _np_compat()
     import imageio
@@ -397,15 +425,18 @@ def render_pair(original, edited, out_dir, fps=30, size=640, window_only=True, l
     t0 = time.perf_counter()
     verts_orig, faces = _vertices(original, frame_slice)
     verts_edit, _ = _vertices(edited, frame_slice)
+    verts_tok = _vertices(tok_recon, frame_slice)[0] if include_tok_recon else None
 
-    # one camera fitted to both sequences
-    flat = np.concatenate([verts_orig, verts_edit]).reshape(-1, 3)
+    # one camera fitted to whichever sequences are actually being rendered, so
+    # turning tok_recon on/off doesn't shift the framing of the other two
+    seqs = [verts_orig, verts_edit] + ([verts_tok] if include_tok_recon else [])
+    flat = np.concatenate(seqs).reshape(-1, 3)
     lo, hi = flat.min(0), flat.max(0)
     center = (lo + hi) / 2
     radius = np.linalg.norm(hi - lo) * 0.75
     cam_pose = _look_at(eye=center + np.array([0, radius * 0.3, radius]), target=center)
 
-    # tint the frames the infiller actually rewrote
+    # tint the frames the infiller actually rewrote (edited only)
     colors = None
     mask = edited.get("edit_mask")
     if mask is not None and frame_slice is not None and len(mask) == verts_edit.shape[0]:
@@ -413,25 +444,38 @@ def render_pair(original, edited, out_dir, fps=30, size=640, window_only=True, l
         hot = np.array([230, 120, 60, 255], dtype=np.uint8)
         colors = [hot if m else base for m in mask]
 
-    log(f"rendering {verts_orig.shape[0]} frames x2 ...")
+    n_videos = 3 if include_tok_recon else 2
+    log(f"rendering {verts_orig.shape[0]} frames x{n_videos} ...")
     orig_frames = _render_frames(verts_orig, faces, cam_pose, size, size)
     edit_frames = _render_frames(verts_edit, faces, cam_pose, size, size, colors=colors)
+    tok_frames = _render_frames(verts_tok, faces, cam_pose, size, size) if include_tok_recon else None
 
     orig_mp4 = out_dir / "original.mp4"
     edit_mp4 = out_dir / "edited.mp4"
     imageio.mimwrite(orig_mp4, orig_frames, fps=fps)
     imageio.mimwrite(edit_mp4, edit_frames, fps=fps)
-    log(f"rendered in {time.perf_counter() - t0:.1f}s -> {orig_mp4.name}, {edit_mp4.name}")
-    return orig_mp4, edit_mp4
+
+    tok_mp4 = None
+    if include_tok_recon:
+        tok_mp4 = out_dir / "tokenizer_recon.mp4"
+        imageio.mimwrite(tok_mp4, tok_frames, fps=fps)
+
+    names = [orig_mp4.name] + ([tok_mp4.name] if tok_mp4 else []) + [edit_mp4.name]
+    log(f"rendered in {time.perf_counter() - t0:.1f}s -> {', '.join(names)}")
+    return orig_mp4, tok_mp4, edit_mp4
 
 
 '''
 the whole thing, end to end
 '''
 def run_pipeline(input_path, out_dir, span_fraction=0.15, splice="window",
-                 fps=30, size=640, window_only=True, render=True, log=print):
+                 fps=30, size=640, window_only=True, render=True, show_tok_recon=False, log=print):
     """
     input_path: .mp4 (runs WHAM first) or .pkl (WHAM output, raw or selected)
+    show_tok_recon: also render the pure-tokenizer-reconstruction 3rd video (no
+        infiller). off by default -- it's a real extra SMPL+render pass, not
+        free, so it's opt-in. the tokenizer_recon_smpl.pkl is always saved
+        either way since it comes for free out of edit_motion()'s own forward pass.
     returns a dict of results/paths.
     """
     input_path = Path(input_path)
@@ -448,25 +492,30 @@ def run_pipeline(input_path, out_dir, span_fraction=0.15, splice="window",
     person = load_person(pkl_path)
     log(f"input pose: {person['pose_world'].shape[0]} frames")
 
-    edited, info = edit_motion(person, span_fraction=span_fraction, splice=splice, log=log)
+    edited, tok_recon, info = edit_motion(person, span_fraction=span_fraction, splice=splice, log=log)
 
     input_pkl = out_dir / "input_smpl.pkl"
+    tok_recon_pkl = out_dir / "tokenizer_recon_smpl.pkl"
     edited_pkl = out_dir / "edited_motion_smpl.pkl"
     joblib.dump(person, input_pkl)
+    joblib.dump(tok_recon, tok_recon_pkl)
     joblib.dump(edited, edited_pkl)
     log(f"saved {edited_pkl}")
 
-    orig_mp4 = edit_mp4 = None
+    orig_mp4 = tok_mp4 = edit_mp4 = None
     if render:
-        orig_mp4, edit_mp4 = render_pair(person, edited, out_dir, fps=fps, size=size,
-                                         window_only=window_only, log=log)
+        orig_mp4, tok_mp4, edit_mp4 = render_triple(person, tok_recon, edited, out_dir, fps=fps, size=size,
+                                                    window_only=window_only,
+                                                    include_tok_recon=show_tok_recon, log=log)
 
     return {
         "info": info,
         "source_pkl": Path(pkl_path),
         "input_pkl": input_pkl,
+        "tokenizer_recon_pkl": tok_recon_pkl,
         "edited_pkl": edited_pkl,
         "original_mp4": orig_mp4,
+        "tokenizer_recon_mp4": tok_mp4,
         "edited_mp4": edit_mp4,
     }
 
@@ -480,9 +529,13 @@ if __name__ == "__main__":
     ap.add_argument("--splice", choices=["window", "mask"], default="window")
     ap.add_argument("--no-render", action="store_true")
     ap.add_argument("--full-clip", action="store_true", help="render all frames, not just the 90-frame window")
+    ap.add_argument("--show-tok-recon", action="store_true",
+                    help="also render the tokenizer-only reconstruction (3rd video, no infiller)")
     a = ap.parse_args()
 
     res = run_pipeline(a.input, a.out, span_fraction=a.span, splice=a.splice,
-                       render=not a.no_render, window_only=not a.full_clip)
+                       render=not a.no_render, window_only=not a.full_clip,
+                       show_tok_recon=a.show_tok_recon)
     print(res["info"])
+    print("tokenizer recon pkl:", res["tokenizer_recon_pkl"])
     print("edited pkl:", res["edited_pkl"])

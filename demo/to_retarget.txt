@@ -1,4 +1,8 @@
 1. activate difftrack (pip install --upgrade --no-cache-dir PyOpenGL PyOpenGL-accelerate SHOULD be present)
+   !! DON'T actually run that upgrade -- it breaks pyrender (segfaults demo/app/'s
+   rendering, silently, doesn't error at import). difftrack is pinned to
+   PyOpenGL==3.1.0 for pyrender; if this retargeting needs newer PyOpenGL,
+   use the separate `gmr` env instead. See CLAUDE.local.md > Environments.
 2. export MUJOCO_GL=egl
 3.cd demo/GMR
 3. python scripts/smplx_to_robot_custom.py \
